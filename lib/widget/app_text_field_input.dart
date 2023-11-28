@@ -14,6 +14,7 @@ class AppTextFieldInput extends StatefulWidget {
   final bool isCurrency;
   final bool withCurrencyPercentage;
   final bool pricePercentage;
+  final bool obscureText;
   final double percentageFrom;
   final double? initialCurrency;
   final Widget? suffixIcon;
@@ -41,6 +42,7 @@ class AppTextFieldInput extends StatefulWidget {
     this.initialValue,
     this.initialCurrency,
     this.textInputAction,
+    this.obscureText = false,
   });
 
   @override
@@ -49,6 +51,7 @@ class AppTextFieldInput extends StatefulWidget {
 
 class _AppTextFieldInputState extends State<AppTextFieldInput> {
   final percentController = TextEditingController();
+  var obscureText = false.obs;
   var currencyFormatter = CurrencyTextInputFormatter(
     symbol: "Rp",
     locale: 'id',
@@ -100,6 +103,7 @@ class _AppTextFieldInputState extends State<AppTextFieldInput> {
 
   @override
   void initState() {
+    obscureText.value = widget.obscureText;
     super.initState();
   }
 
@@ -160,41 +164,45 @@ class _AppTextFieldInputState extends State<AppTextFieldInput> {
                 ),
               ),
             Expanded(
-              child: TextFormField(
-                readOnly: widget.readOnly,
-                validator: widget.validator,
-                controller: widget.controller,
-                initialValue: widget.initialValue,
-                onTap: widget.onTap,
-                textInputAction: widget.textInputAction,
-                keyboardType: widget.numberOnly || widget.isCurrency
-                    ? TextInputType.phone
-                    : TextInputType.name,
-                onChanged: (v) {
-                  if (widget.isCurrency) {
-                    if (widget.onCurrencyChanged != null) {
-                      widget.onCurrencyChanged!(
-                        currencyFormatter.getUnformattedValue().toDouble(),
-                      );
-                    }
-                    if (widget.withCurrencyPercentage) {
-                      if (widget.pricePercentage) {
-                        countPercentage();
-                      } else {
-                        countPercentageForm();
+              child: Obx(
+                () => TextFormField(
+                  readOnly: widget.readOnly,
+                  validator: widget.validator,
+                  controller: widget.controller,
+                  initialValue: widget.initialValue,
+                  onTap: widget.onTap,
+                  textInputAction: widget.textInputAction,
+                  obscureText: obscureText.value,
+                  keyboardType: widget.numberOnly || widget.isCurrency
+                      ? TextInputType.phone
+                      : TextInputType.name,
+                  onChanged: (v) {
+                    if (widget.isCurrency) {
+                      if (widget.onCurrencyChanged != null) {
+                        widget.onCurrencyChanged!(
+                          currencyFormatter.getUnformattedValue().toDouble(),
+                        );
+                      }
+                      if (widget.withCurrencyPercentage) {
+                        if (widget.pricePercentage) {
+                          countPercentage();
+                        } else {
+                          countPercentageForm();
+                        }
                       }
                     }
-                  }
-                },
-                inputFormatters: [
-                  if (widget.numberOnly) FilteringTextInputFormatter.digitsOnly,
-                  if (widget.isCurrency) currencyFormatter,
-                ],
-                decoration: AppTheme.textFieldInputDecoration.copyWith(
-                  filled: widget.readOnly && widget.readOnlyDifColor,
-                  fillColor: const Color(0xFFEEF2F8),
-                  hintText: widget.hintText,
-                  suffixIcon: widget.suffixIcon,
+                  },
+                  inputFormatters: [
+                    if (widget.numberOnly)
+                      FilteringTextInputFormatter.digitsOnly,
+                    if (widget.isCurrency) currencyFormatter,
+                  ],
+                  decoration: AppTheme.textFieldInputDecoration.copyWith(
+                    filled: widget.readOnly && widget.readOnlyDifColor,
+                    fillColor: const Color(0xFFEEF2F8),
+                    hintText: widget.hintText,
+                    suffixIcon: widget.suffixIcon,
+                  ),
                 ),
               ),
             ),

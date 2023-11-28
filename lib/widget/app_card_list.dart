@@ -9,15 +9,14 @@ class AppCardList extends StatelessWidget {
     super.key,
     required this.child,
     required this.isLast,
-    this.marginPadding = 16,
+    this.marginPadding = 12,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(bottom: isLast ? 0 : marginPadding),
-      margin: EdgeInsets.only(bottom: isLast ? 0 : marginPadding),
+      padding: EdgeInsets.only(top: marginPadding, bottom: marginPadding),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(

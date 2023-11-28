@@ -33,6 +33,7 @@ abstract class Routes {
   static const tsxAccount = _Paths.tsxAccount;
   static const mutasiKas = _Paths.mutasiKas;
   static const mutasiKasUpdate = _Paths.mutasiKasUpdate;
+  static const employee = _Paths.employee;
 }
 
 abstract class _Paths {
@@ -67,4 +68,5 @@ abstract class _Paths {
   static const productRack = '/product/rack';
   static const productFactory = '/product/factory';
   static const productDetailMultiUnit = '/product/detail/MultiUnit';
+  static const employee = '/employee';
 }

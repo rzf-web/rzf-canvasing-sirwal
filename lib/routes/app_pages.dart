@@ -6,6 +6,7 @@ import 'package:rzf_canvasing_sirwal/binding/cashflow_update.binding.dart';
 import 'package:rzf_canvasing_sirwal/binding/customer.binding.dart';
 import 'package:rzf_canvasing_sirwal/binding/customer_detail.binding..dart';
 import 'package:rzf_canvasing_sirwal/binding/customer_update.binding.dart';
+import 'package:rzf_canvasing_sirwal/binding/employee.binding.dart';
 import 'package:rzf_canvasing_sirwal/binding/home.binding.dart';
 import 'package:rzf_canvasing_sirwal/binding/mutasi_kas.binding.dart';
 import 'package:rzf_canvasing_sirwal/binding/mutasi_kas_update.binding.dart';
@@ -27,6 +28,7 @@ import 'package:rzf_canvasing_sirwal/view/cash_flow/cashflow.page.update.dart';
 import 'package:rzf_canvasing_sirwal/view/customer/customer.page.dart';
 import 'package:rzf_canvasing_sirwal/view/customer/customer.page.detail.dart';
 import 'package:rzf_canvasing_sirwal/view/customer/customer.page.update.dart';
+import 'package:rzf_canvasing_sirwal/view/employee/employee.page.dart';
 import 'package:rzf_canvasing_sirwal/view/home/home.page.dart';
 import 'package:rzf_canvasing_sirwal/view/mutasi_kas/mutasi_kas.page.dart';
 import 'package:rzf_canvasing_sirwal/view/mutasi_kas/mutasi_kas.page.update.dart';
@@ -231,6 +233,12 @@ class AppPages {
       name: Routes.mutasiKasUpdate,
       page: () => const MutasiKasUpdatePage(),
       binding: MutasiKasUpdateBinding(),
+      transition: _pageTransition,
+    ),
+    GetPage(
+      name: Routes.employee,
+      page: () => const EmployeePage(),
+      binding: EmployeeBinding(),
       transition: _pageTransition,
     ),
   ];
