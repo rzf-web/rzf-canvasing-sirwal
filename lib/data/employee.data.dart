@@ -5,7 +5,6 @@ import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
 class EmployeeData {
   Future<List<Employee>> fetchData() async {
     var employees = <Employee>[];
-    print(getParamQuery());
     var response = await ApiService.get(
       url + employeeUrl,
       queryParameters: getParamQuery(),

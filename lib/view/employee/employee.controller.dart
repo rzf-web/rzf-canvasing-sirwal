@@ -4,6 +4,7 @@ import 'package:rzf_canvasing_sirwal/data/employee.data.dart';
 import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/model/employee.dart';
+import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_helper.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
 import 'package:rzf_canvasing_sirwal/view/employee/employee.page.password.dart';
@@ -40,9 +41,8 @@ class EmployeeController extends GetxController {
       if (success) {
         var data = getDataResponse(response)['data'] ?? {};
         passwordController.clear();
-        for (var item in data.keys) {
-          print("$item => ${data[item]}");
-        }
+        GlobalVar.employee = Employee.fromJson(data);
+        Get.toNamed(Routes.sale);
       }
     } else {
       showDialogAction(
