@@ -16,8 +16,6 @@ class SignInController extends GetxController {
   var waiting = false.obs;
 
   login() async {
-    Get.offAllNamed(Routes.employee);
-    return;
     var valid = emailController.text != '' && pwController.text != '';
     if (valid) {
       waiting.value = true;
@@ -32,7 +30,7 @@ class SignInController extends GetxController {
         GlobalVar.userId = int.parse(data['user_id'] ?? "0");
         GlobalVar.profile = Profile.fromJson(data);
         if (rememberMe) SharedPrefs.save(GlobalVar.userId);
-        Get.offAllNamed(Routes.sale);
+        Get.offAllNamed(Routes.employee);
       }
     } else {
       showDialogAction(

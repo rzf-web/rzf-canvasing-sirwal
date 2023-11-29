@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rzf_canvasing_sirwal/model/employee.dart';
+import 'package:rzf_canvasing_sirwal/theme/theme.dart';
 import 'package:rzf_canvasing_sirwal/view/employee/employee.controller.dart';
 import 'package:rzf_canvasing_sirwal/view/employee/widget/app_employee_card.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_custom_appbar.dart';
@@ -17,25 +19,36 @@ class EmployeePage extends GetView<EmployeeController> {
         showLeading: false,
         title: "Pegawai",
       ),
-      body: Stack(
-        children: [
-          if (controller.employees().isEmpty && !controller.isLoading.value)
-            const AppDataNotFound(),
-          if (controller.isLoading.value)
-            const AppLoading()
-          else
-            AppRemoveOverscroll(
-              child: ListView.builder(
-                itemCount: controller.employees().length,
-                itemBuilder: (context, index) {
-                  return AppEmployeeCard(
-                    isLast: false,
-                    onTap: controller.passwordPage,
-                  );
-                },
+      body: Obx(
+        () => Stack(
+          children: [
+            if (controller.employees().isEmpty && !controller.isLoading.value)
+              const AppDataNotFound(),
+            if (controller.isLoading.value)
+              const AppLoading()
+            else
+              AppRemoveOverscroll(
+                child: RefreshIndicator(
+                  onRefresh: controller.getData,
+                  color: AppTheme.primaryColor,
+                  child: ListView.builder(
+                    itemCount: controller.employees().length,
+                    itemBuilder: (context, index) {
+                      late Employee employee;
+                      if (controller.employees().isNotEmpty) {
+                        employee = controller.employees().elementAt(index);
+                      }
+                      return AppEmployeeCard(
+                        isLast: false,
+                        employee: employee,
+                        onTap: () => controller.passwordPage(employee),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -29,7 +29,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       if (GlobalVar.profile == null) {
         return Get.offAllNamed(Routes.login);
       } else {
-        return Get.offAllNamed(Routes.home);
+        return Get.offAllNamed(Routes.employee);
       }
     });
     super.initState();

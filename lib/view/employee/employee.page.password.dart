@@ -13,8 +13,8 @@ class EmployeePasswordPage extends GetView<EmployeeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppCustomAppBar(
-        title: "Pegawai",
+      appBar: AppCustomAppBar(
+        title: controller.employee!.user,
       ),
       body: AppRemoveOverscroll(
         child: SingleChildScrollView(
@@ -31,9 +31,12 @@ class EmployeePasswordPage extends GetView<EmployeeController> {
                     obscureText: true,
                   ),
                 ),
-                AppButton(
-                  child: const Text('Lanjutkan', style: AppTheme.btnStyle),
-                  onPressed: () {},
+                Obx(
+                  () => AppButton(
+                    onPressed: controller.login,
+                    isLoading: controller.loginLoading.value,
+                    child: const Text('Lanjutkan', style: AppTheme.btnStyle),
+                  ),
                 ),
               ],
             ),

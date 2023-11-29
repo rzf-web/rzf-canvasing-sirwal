@@ -4,7 +4,8 @@ import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_dialog_action.dart';
 
-var url = "https://rzfkomputer.com/cnv-api/abm";
+var url = "https://rzfkomputer.com/cnv-api/sirwal";
+// var url = "http://192.168.100.39/rzf-cnv-api/sirwal";
 var loginUrl = '/login';
 var supplierUrl = '/supplier';
 var customerUrl = '/customer';
@@ -23,6 +24,8 @@ var buyUrl = '/buy';
 var saleUrl = '/sale';
 var cashFlowUrl = '/cash';
 var mutasiCash = '/mutation';
+var employeeUrl = '/pass';
+var employeeLoginUrl = '/pass/login';
 
 getHeader({Map<String, dynamic>? header}) {
   var dataHeader = {
@@ -49,6 +52,10 @@ getParamQuery({Map<String, dynamic>? query}) {
   }
 
   return paramQuery;
+}
+
+FormData setFormData(Map<String, dynamic> map) {
+  return FormData.fromMap(map);
 }
 
 dynamic getDataResponse(dynamic data) {
