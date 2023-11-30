@@ -213,11 +213,9 @@ class ProductUpdateController extends GetxController {
     if (data != null && data is Product?) {
       var product = data as Product;
       productCode = product.id!;
-      buyDate = product.buyDate;
       buyPrice.value = product.defaultUnit.buy;
       retailPrice = product.defaultUnit.retail;
       partaiPrice = product.defaultUnit.partai;
-      group.value = product.group;
       cabangPrice = product.defaultUnit.cabang;
       idController.text = productCode;
       nameController.text = product.name;
@@ -225,12 +223,11 @@ class ProductUpdateController extends GetxController {
       typeController.text = product.type;
       rackController.text = product.rack;
       factoryController.text = product.factory;
-      groupController.text = product.group;
       supplierController.text = product.supplier;
       lastDateBuyController.text = dateFormatUI(buyDate);
       satuanController.text = product.defaultUnit.unit;
       stokController.text = doubleFormatter(product.stock);
-      stokMinController.text = doubleFormatter(product.minStock);
+      stokMinController.text = doubleFormatter(product.stockDisplay);
       buyController.text = moneyFormatter(buyPrice.value);
       retailController.text = moneyFormatter(retailPrice);
       partaiController.text = moneyFormatter(partaiPrice);

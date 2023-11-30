@@ -78,11 +78,6 @@ class ProductDetailPage extends GetView<ProductDetailController> {
                         padding: const EdgeInsets.only(bottom: 8),
                       ),
                       AppKeyValueItem(
-                        keyItem: "Trakhir Beli",
-                        value: dateFormatUI(controller.data.value.buyDate),
-                        padding: const EdgeInsets.only(bottom: 8),
-                      ),
-                      AppKeyValueItem(
                         keyItem: "Pabrik",
                         value: controller.data.value.factory,
                         padding: const EdgeInsets.only(bottom: 8),
@@ -90,11 +85,6 @@ class ProductDetailPage extends GetView<ProductDetailController> {
                       AppKeyValueItem(
                         keyItem: "Supplier",
                         value: controller.data.value.supplier,
-                        padding: const EdgeInsets.only(bottom: 8),
-                      ),
-                      AppKeyValueItem(
-                        keyItem: "Group",
-                        value: controller.data.value.group,
                         padding: const EdgeInsets.only(bottom: 8),
                       ),
                       AppKeyValueItem(
@@ -119,7 +109,8 @@ class ProductDetailPage extends GetView<ProductDetailController> {
                       ),
                       AppKeyValueItem(
                         keyItem: "Min Stok",
-                        value: doubleFormatter(controller.data.value.minStock),
+                        value:
+                            doubleFormatter(controller.data.value.stockDisplay),
                         padding: const EdgeInsets.only(bottom: 8),
                       ),
                       AppKeyValueItem(

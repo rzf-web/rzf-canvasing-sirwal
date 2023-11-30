@@ -5,46 +5,43 @@ import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 
 class Product with IName {
   final String? id;
+  final String? barcode;
   final String name;
-  String group;
   final String type;
   final String category;
   final String supplier;
   final String rack;
   final String factory;
-  final DateTime buyDate;
   final double stock;
-  final double minStock;
+  final double stockDisplay;
   final ProductUnit defaultUnit;
 
   Product({
     this.id,
-    required this.buyDate,
+    this.barcode,
     required this.name,
     required this.type,
     required this.category,
     required this.supplier,
-    required this.group,
     required this.rack,
     required this.factory,
     required this.stock,
-    required this.minStock,
+    required this.stockDisplay,
     required this.defaultUnit,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['product_id'] ?? "",
-      buyDate: DateTime.parse(json['buy_date']),
+      barcode: json['barcode'] ?? "",
       name: json['product_name'] ?? "",
       type: json['type_name'] ?? "",
       category: json['category_name'] ?? "",
       supplier: json['supplier_name'] ?? "",
-      group: json['npwp'] ?? "",
       rack: json['rak'] ?? "",
       factory: json['factory'] ?? "",
       stock: FuncHelper().jsonStringToDouble(json['stock']),
-      minStock: FuncHelper().jsonStringToDouble(json['stock_min']),
+      stockDisplay: FuncHelper().jsonStringToDouble(json['stock_display']),
       defaultUnit: ProductUnit.fromJson(json),
     );
   }

@@ -37,9 +37,9 @@ class ProductUnit {
 
   double _getSalePrice(ProductUnitPrice v) {
     switch (v) {
-      case ProductUnitPrice.partai:
+      case ProductUnitPrice.grosir1:
         return partai;
-      case ProductUnitPrice.cabang:
+      case ProductUnitPrice.grosir2:
         return cabang;
       default:
         return retail;

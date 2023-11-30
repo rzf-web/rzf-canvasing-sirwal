@@ -14,17 +14,15 @@ class ProductOnCart extends Product with IName {
 
   ProductOnCart({
     required super.id,
-    required super.buyDate,
     required super.name,
     required super.type,
     required super.category,
     required super.supplier,
     required super.defaultUnit,
-    required super.group,
     required super.rack,
     required super.factory,
     required super.stock,
-    required super.minStock,
+    required super.stockDisplay,
     required this.transaction,
     required this.onCart,
     this.priceType = ProductUnitPrice.retail,
@@ -36,18 +34,16 @@ class ProductOnCart extends Product with IName {
   factory ProductOnCart.fromParent(Product data, TransactionType type) {
     return ProductOnCart(
       id: data.id,
-      buyDate: data.buyDate,
       name: data.name,
       type: data.type,
       category: data.category,
       supplier: data.supplier,
       defaultUnit: data.defaultUnit,
       transaction: type,
-      group: data.group,
       rack: data.rack,
       factory: data.factory,
       stock: data.stock,
-      minStock: data.minStock,
+      stockDisplay: data.stockDisplay,
       dscNominal: 0,
       onCart: 0,
     );
@@ -70,7 +66,6 @@ class ProductOnCart extends Product with IName {
       'discount': dscPercent,
       'hpp': 0,
       'ppn': 0,
-      'npwp': group,
     };
   }
 

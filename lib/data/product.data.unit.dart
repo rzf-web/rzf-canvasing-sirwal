@@ -1,4 +1,5 @@
 import 'package:rzf_canvasing_sirwal/abstract/fetch_api_data.dart';
+import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_helper.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
@@ -25,7 +26,10 @@ class ProductUnitData extends FetchApiData {
     var units = <ProductUnit>[];
     var response = await ApiService.get(
       "$url$multisatUrl",
-      queryParameters: getParamQuery(query: {'product_id': productID}),
+      queryParameters: getParamQuery(query: {
+        'product_id': productID,
+        'cabang_id': GlobalVar.employee!.idCabang,
+      }),
     );
     var succes = await manageResponse(response);
     if (succes) {

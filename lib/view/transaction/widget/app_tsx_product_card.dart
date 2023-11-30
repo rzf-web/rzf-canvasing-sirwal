@@ -66,18 +66,16 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
   onChanged() {
     var productOnCart = ProductOnCart(
       id: widget.product.id,
-      buyDate: widget.product.buyDate,
       name: widget.product.name,
       type: widget.product.type,
       category: widget.product.category,
       supplier: widget.product.supplier,
       transaction: widget.product.transaction,
       defaultUnit: widget.product.defaultUnit,
-      group: group,
       rack: widget.product.rack,
       factory: widget.product.factory,
       stock: widget.product.stock,
-      minStock: widget.product.minStock,
+      stockDisplay: widget.product.stockDisplay,
       priceType: widget.priceType,
       unit: unit.value!,
       onCart: onCart.value,
@@ -87,7 +85,6 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
   }
 
   initialize() {
-    group = widget.product.group;
     unit.value = widget.product.unit ?? widget.product.defaultUnit;
     onCart.value = widget.product.onCart;
     baseStock = widget.product.stock;
@@ -102,7 +99,6 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
     Get.back();
     onCart.value = qty;
     this.group = group;
-    widget.product.group = group;
     if (!widget.product.transaction.isBuy) stock.value = baseStock - qty;
     this.unit.value = unit;
     onChanged();

@@ -43,7 +43,6 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   fetchData() async {
     loading.value = true;
     qty.value = widget.onCart;
-    group.value = widget.product.group;
     units = await ProductUnitData().getProductUnit(widget.product.id!);
     if (widget.initialUnit == null) {
       unit.value = units.firstWhere((e) => e.isi == 1);

@@ -73,7 +73,6 @@ class _AppCartCardState extends State<AppCartCard> {
     this.qty.value = qty ~/ unit.isi!;
     if (!widget.product.transaction.isBuy) stock.value = baseStock - qty;
     widget.product.onCart = this.qty.value;
-    widget.product.group = group;
     widget.product.unit = unit;
     _setActiveQty();
   }

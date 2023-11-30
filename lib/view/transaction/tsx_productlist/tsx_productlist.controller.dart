@@ -99,8 +99,7 @@ class TsxProductListController extends GetxController {
             onProductChanged(
               product
                 ..onCart = qty
-                ..unit = unit
-                ..group = group,
+                ..unit = unit,
             );
             _setIntoBaseData();
           },
@@ -125,7 +124,6 @@ class TsxProductListController extends GetxController {
         productOnCarts.removeWhere((e) => e.id == data.id);
       } else {
         productOnCart.unit = data.unit;
-        productOnCart.group = data.group;
         productOnCart.onCart = data.onCart;
       }
     }
@@ -155,7 +153,6 @@ class TsxProductListController extends GetxController {
       );
       if (productOnCart != null) {
         item.unit = productOnCart.unit;
-        item.group = productOnCart.group;
         item.onCart = productOnCart.onCart;
         item.dscNominal = productOnCart.dscNominal;
       }
