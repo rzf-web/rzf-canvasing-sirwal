@@ -215,8 +215,8 @@ class ProductUpdateController extends GetxController {
       productCode = product.id!;
       buyPrice.value = product.defaultUnit.buy;
       retailPrice = product.defaultUnit.retail;
-      partaiPrice = product.defaultUnit.partai;
-      cabangPrice = product.defaultUnit.cabang;
+      partaiPrice = product.defaultUnit.member;
+      cabangPrice = product.defaultUnit.grosir3;
       idController.text = productCode;
       nameController.text = product.name;
       categoryController.text = product.category;

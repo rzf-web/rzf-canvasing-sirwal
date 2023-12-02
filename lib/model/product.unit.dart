@@ -7,16 +7,20 @@ class ProductUnit {
   final double? isi;
   final double buy;
   final double retail;
-  final double partai;
-  final double cabang;
+  final double member;
+  final double grosir3;
+  final double grosir6;
+  final double grosir12;
 
   ProductUnit({
     required this.unit,
     required this.isi,
     required this.buy,
     required this.retail,
-    required this.partai,
-    required this.cabang,
+    required this.member,
+    required this.grosir3,
+    required this.grosir6,
+    required this.grosir12,
   });
 
   factory ProductUnit.fromJson(Map<String, dynamic> json) {
@@ -25,8 +29,10 @@ class ProductUnit {
       isi: FuncHelper().jsonStringToDouble(json['isi'] ?? 1),
       buy: FuncHelper().jsonStringToDouble(json['buy']),
       retail: FuncHelper().jsonStringToDouble(json['retail']),
-      partai: FuncHelper().jsonStringToDouble(json['partai']),
-      cabang: FuncHelper().jsonStringToDouble(json['cabang']),
+      member: FuncHelper().jsonStringToDouble(json['member']),
+      grosir3: FuncHelper().jsonStringToDouble(json['grosir3']),
+      grosir6: FuncHelper().jsonStringToDouble(json['grosir6']),
+      grosir12: FuncHelper().jsonStringToDouble(json['grosir12']),
     );
   }
 
@@ -38,9 +44,9 @@ class ProductUnit {
   double _getSalePrice(ProductUnitPrice v) {
     switch (v) {
       case ProductUnitPrice.grosir1:
-        return partai;
+        return member;
       case ProductUnitPrice.grosir2:
-        return cabang;
+        return grosir3;
       default:
         return retail;
     }

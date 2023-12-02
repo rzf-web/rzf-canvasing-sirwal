@@ -152,8 +152,8 @@ class ProductMultiUnitController extends GetxController {
       var value = double.tryParse(isiController.text) ?? 0.0;
       buyPrice.value = data.defaultUnit.buy * value;
       retailPrice = data.defaultUnit.retail * value;
-      partaiPrice = data.defaultUnit.partai * value;
-      cabangPrice = data.defaultUnit.cabang * value;
+      partaiPrice = data.defaultUnit.member * value;
+      cabangPrice = data.defaultUnit.grosir3 * value;
       buyController.text = moneyFormatter(buyPrice.value);
       retailController.text = moneyFormatter(retailPrice);
       partaiController.text = moneyFormatter(partaiPrice);
@@ -209,8 +209,8 @@ class ProductMultiUnitController extends GetxController {
       unitController.text = unit.unit;
       unitPrice.value = unit.unit;
       retailPrice = unit.retail;
-      partaiPrice = unit.partai;
-      cabangPrice = unit.cabang;
+      partaiPrice = unit.member;
+      cabangPrice = unit.grosir3;
       buyPrice.value = unit.buy;
       isiController.text = doubleFormatter(unit.isi!);
       buyController.text = moneyFormatter(buyPrice.value);

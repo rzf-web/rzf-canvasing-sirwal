@@ -32,9 +32,9 @@ class _AppUnitColBodyState extends State<AppUnitColBody> {
   double getPrice() {
     switch (widget.unitPrice) {
       case "Harga Partai":
-        return widget.unit.partai;
+        return widget.unit.member;
       case "Harga Cabang":
-        return widget.unit.cabang;
+        return widget.unit.grosir3;
       default:
         return widget.unit.retail;
     }

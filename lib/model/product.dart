@@ -1,4 +1,5 @@
 import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_point_type.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
@@ -14,6 +15,8 @@ class Product with IName {
   final String factory;
   final double stock;
   final double stockDisplay;
+  final double nominalPoint;
+  final ProductPointType pointType;
   final ProductUnit defaultUnit;
 
   Product({
@@ -27,6 +30,8 @@ class Product with IName {
     required this.factory,
     required this.stock,
     required this.stockDisplay,
+    required this.nominalPoint,
+    required this.pointType,
     required this.defaultUnit,
   });
 
@@ -42,6 +47,8 @@ class Product with IName {
       factory: json['factory'] ?? "",
       stock: FuncHelper().jsonStringToDouble(json['stock']),
       stockDisplay: FuncHelper().jsonStringToDouble(json['stock_display']),
+      nominalPoint: FuncHelper().jsonStringToDouble(json['npoin']),
+      pointType: ProductPointTypeExtension.generatePointType(json['jpoin']),
       defaultUnit: ProductUnit.fromJson(json),
     );
   }

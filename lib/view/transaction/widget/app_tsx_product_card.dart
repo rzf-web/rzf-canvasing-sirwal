@@ -76,6 +76,8 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       factory: widget.product.factory,
       stock: widget.product.stock,
       stockDisplay: widget.product.stockDisplay,
+      nominalPoint: widget.product.nominalPoint,
+      pointType: widget.product.pointType,
       priceType: widget.priceType,
       unit: unit.value!,
       onCart: onCart.value,

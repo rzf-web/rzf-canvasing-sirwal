@@ -8,6 +8,7 @@ class ProductOnCart extends Product with IName {
   final TransactionType transaction;
   ProductUnitPrice priceType;
   ProductUnit? unit;
+  int pointsEarned;
   double dscPercent;
   double dscNominal;
   int onCart;
@@ -22,11 +23,14 @@ class ProductOnCart extends Product with IName {
     required super.rack,
     required super.factory,
     required super.stock,
+    required super.nominalPoint,
+    required super.pointType,
     required super.stockDisplay,
     required this.transaction,
     required this.onCart,
     this.priceType = ProductUnitPrice.retail,
     this.unit,
+    this.pointsEarned = 0,
     this.dscNominal = 0,
     this.dscPercent = 0,
   });
@@ -44,6 +48,8 @@ class ProductOnCart extends Product with IName {
       factory: data.factory,
       stock: data.stock,
       stockDisplay: data.stockDisplay,
+      nominalPoint: data.nominalPoint,
+      pointType: data.pointType,
       dscNominal: 0,
       onCart: 0,
     );

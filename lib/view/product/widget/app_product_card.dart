@@ -87,7 +87,7 @@ class AppProductCard extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            moneyFormatter(product.defaultUnit.partai),
+            moneyFormatter(product.defaultUnit.member),
             textAlign: TextAlign.end,
             style: captionStyle,
           ),

@@ -130,14 +130,14 @@ class ProductDetailPage extends GetView<ProductDetailController> {
                       AppKeyValueItem(
                         keyItem: "Harga Partai",
                         value: moneyFormatter(
-                          controller.data.value.defaultUnit.partai,
+                          controller.data.value.defaultUnit.member,
                         ),
                         padding: const EdgeInsets.only(bottom: 8),
                       ),
                       AppKeyValueItem(
                         keyItem: "Harga Cabang",
                         value: moneyFormatter(
-                          controller.data.value.defaultUnit.cabang,
+                          controller.data.value.defaultUnit.grosir3,
                         ),
                         padding: const EdgeInsets.only(bottom: 8),
                       ),
