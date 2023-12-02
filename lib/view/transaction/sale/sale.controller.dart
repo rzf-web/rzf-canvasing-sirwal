@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/data/sale.data.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
@@ -89,6 +90,11 @@ class SaleController extends GetxController implements TsxListController {
     } else {
       return true;
     }
+  }
+
+  logout() async {
+    GlobalVar.employee = null;
+    Get.offAllNamed(Routes.employee);
   }
 
   _listener() {

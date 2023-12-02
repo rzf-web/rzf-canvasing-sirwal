@@ -43,7 +43,11 @@ getHeader({Map<String, dynamic>? header}) {
 }
 
 getParamQuery({Map<String, dynamic>? query}) {
-  Map<String, dynamic> paramQuery = {"user_id": GlobalVar.userId};
+  var emp = GlobalVar.employee;
+  Map<String, dynamic> paramQuery = {
+    "user_id": GlobalVar.userId,
+    if (emp != null) 'cabang_id': emp.idCabang,
+  };
 
   if (query != null) {
     for (var key in query.keys) {

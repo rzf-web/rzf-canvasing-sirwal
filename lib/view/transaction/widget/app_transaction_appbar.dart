@@ -11,6 +11,7 @@ class AppBarTransaction extends StatelessWidget implements PreferredSizeWidget {
   final String hintText;
   final bool showLeading;
   final bool searchMode;
+  final Widget? leading;
   final TextEditingController controller;
   final Function(DateTime, DateTime) onTap;
   final Function() onChangedSearch;
@@ -23,6 +24,7 @@ class AppBarTransaction extends StatelessWidget implements PreferredSizeWidget {
     required this.onChangedSearch,
     required this.controller,
     required this.hintText,
+    this.leading,
   });
 
   @override
@@ -31,6 +33,7 @@ class AppBarTransaction extends StatelessWidget implements PreferredSizeWidget {
       hideAppBar: searchMode,
       title: title,
       showLeading: showLeading,
+      leading: leading,
       actions: [
         AppSvgIconBtn(
           svg: svgSearch,

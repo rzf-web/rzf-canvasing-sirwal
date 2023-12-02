@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:rzf_canvasing_sirwal/helper/assets.dart';
+import 'package:rzf_canvasing_sirwal/theme/theme.dart';
 import 'package:rzf_canvasing_sirwal/view/navigation/navigation.controller.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/sale/sale.controller.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_list_transaction.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_transaction_appbar.dart';
+import 'package:rzf_canvasing_sirwal/widget/app_svg_icon_btn.dart';
 
 class SalePage extends GetView<SaleController> {
   final bool refreshController;
@@ -25,6 +28,12 @@ class SalePage extends GetView<SaleController> {
             title: "Data Penjualan",
             hintText: "Nama Pelanggan",
             showLeading: showLeading,
+            leading: AppSvgIconBtn(
+              svg: svgLogout,
+              onTap: controller.logout,
+              size: 16,
+              color: AppTheme.titleColor,
+            ),
             controller: controller.searchController,
             onChangedSearch: controller.changeMode,
             onTap: controller.pickDate,

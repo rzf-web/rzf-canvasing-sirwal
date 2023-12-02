@@ -7,6 +7,7 @@ import 'package:rzf_canvasing_sirwal/model/employee.dart';
 import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_helper.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
+import 'package:rzf_canvasing_sirwal/services/shared/shared_pref.dart';
 import 'package:rzf_canvasing_sirwal/view/employee/employee.page.password.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_dialog_action.dart';
 
@@ -42,7 +43,7 @@ class EmployeeController extends GetxController {
         var data = getDataResponse(response)['data'] ?? {};
         passwordController.clear();
         GlobalVar.employee = Employee.fromJson(data);
-        Get.toNamed(Routes.sale);
+        Get.offAllNamed(Routes.sale);
       }
     } else {
       showDialogAction(
@@ -50,6 +51,11 @@ class EmployeeController extends GetxController {
         'Masukan password yang valid dengan akun Anda!!!',
       );
     }
+  }
+
+  logout() async {
+    await SharedPrefs.clear();
+    Get.offAllNamed(Routes.login);
   }
 
   passwordPage(Employee employee) async {
