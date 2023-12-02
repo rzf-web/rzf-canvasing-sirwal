@@ -8,6 +8,7 @@ import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
@@ -18,13 +19,16 @@ class TsxProductListController extends GetxController {
   TransactionType? transactionType;
   final searchController = TextEditingController();
   final refreshController = RefreshController(initialRefresh: false);
+  final personController = TextEditingController();
   var startPage = 1;
   var lastPage = 1;
   var isLastPage = false.obs;
   var isLoading = false.obs;
 
-  var totalProduct = 0.obs;
+  Customer? customer;
   var total = 0.0.obs;
+  var point = 0.obs;
+  var totalProduct = 0.obs;
   var productOnCarts = <ProductOnCart>[].obs;
   var productList = <ProductOnCart>[].obs;
   var priceType = ProductUnitPrice.retail.obs;
@@ -115,6 +119,14 @@ class TsxProductListController extends GetxController {
     onSave(productOnCarts);
   }
 
+  personPage() async {
+    var data = await Get.toNamed(Routes.customer, arguments: true);
+    if (data != null) {
+      customer = (data as Customer);
+      personController.text = customer!.name;
+    }
+  }
+
   onProductChanged(ProductOnCart data) {
     var productOnCart = productOnCarts.firstWhereOrNull((e) => e.id == data.id);
     if (productOnCart == null) {
@@ -128,7 +140,7 @@ class TsxProductListController extends GetxController {
         productOnCart.onCart = data.onCart;
       }
     }
-    _countTotal();
+    countTotal();
   }
 
   onRemoveFromCart(ProductOnCart data) {
@@ -139,12 +151,12 @@ class TsxProductListController extends GetxController {
   cartPage() async {
     await Get.to(const TsxProductCartPage());
     refreshData();
-    _countTotal();
+    countTotal();
   }
 
   clearCart() {
     productOnCarts().clear();
-    _countTotal();
+    countTotal();
   }
 
   _setIntoBaseData() {
@@ -161,12 +173,15 @@ class TsxProductListController extends GetxController {
     productList.refresh();
   }
 
-  _countTotal() {
+  countTotal() {
+    point.value = 0;
     total.value = 0;
     totalProduct.value = productOnCarts.length;
     for (var item in productOnCarts) {
       var price = item.unit!.getPrice(priceType.value, transactionType!);
       total.value += price * (item.onCart ~/ item.unit!.isi!);
+      point.value += item.pointsEarned;
+      print(item.pointsEarned);
     }
   }
 

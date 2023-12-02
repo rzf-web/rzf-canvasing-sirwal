@@ -18,11 +18,13 @@ class AppCartCard extends StatefulWidget {
   final bool isLast;
   final ProductOnCart product;
   final Function(ProductOnCart) onRemove;
+  final Function() onPointChanged;
   const AppCartCard({
     super.key,
     required this.product,
     required this.isLast,
     required this.onRemove,
+    required this.onPointChanged,
   });
 
   @override
@@ -45,16 +47,16 @@ class _AppCartCardState extends State<AppCartCard> {
 
   substractQty() {
     qty.value--;
-    _changeUnit();
-    _setActiveQty();
     _pointsCalculation();
+    _changeUnitPoint();
+    _setActiveQty();
   }
 
   addQty() {
     qty.value++;
-    _changeUnit();
-    _setActiveQty();
     _pointsCalculation();
+    _changeUnitPoint();
+    _setActiveQty();
   }
 
   _setActiveQty() {
@@ -68,8 +70,10 @@ class _AppCartCardState extends State<AppCartCard> {
     addActive.value = isUnderStock || isBuy;
   }
 
-  _changeUnit() {
+  _changeUnitPoint() {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
+    widget.product.pointsEarned = point.value;
+    widget.onPointChanged();
   }
 
   _pointsCalculation() {
@@ -94,7 +98,9 @@ class _AppCartCardState extends State<AppCartCard> {
     this.point.value = point;
     widget.product.onCart = this.qty.value;
     widget.product.unit = unit;
+    widget.product.pointsEarned = point;
     _setActiveQty();
+    widget.onPointChanged();
   }
 
   initialize() {
