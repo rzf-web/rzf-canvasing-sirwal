@@ -22,12 +22,12 @@ class ProductUnitData extends FetchApiData {
     return units;
   }
 
-  Future<List<ProductUnit>> getProductUnit(String productID) async {
+  Future<List<ProductUnit>> getProductUnit(String barcode) async {
     var units = <ProductUnit>[];
     var response = await ApiService.get(
       "$url$multisatUrl",
       queryParameters: getParamQuery(query: {
-        'product_id': productID,
+        'barcode': barcode,
         'cabang_id': GlobalVar.employee!.idCabang,
       }),
     );

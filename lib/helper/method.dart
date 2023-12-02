@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_point_type.dart';
 
 class FuncHelper {
   Timer? debouncer;
@@ -40,5 +42,29 @@ class FuncHelper {
 
   String dateToDB(DateTime date) {
     return DateFormat("yyyy-MM-dd").format(date);
+  }
+
+  int pointsCalculation(
+    int qty,
+    double price,
+    double nPoint,
+    ProductPointType pointType,
+  ) {
+    var total = price * qty;
+    var point = 0;
+    switch (pointType) {
+      case ProductPointType.productQty:
+        point = qty ~/ nPoint;
+        break;
+      case ProductPointType.productPrice:
+        point = total ~/ nPoint;
+        break;
+      case ProductPointType.totalTransaction:
+        nPoint = GlobalVar.employee!.nominalPoint;
+        point = total ~/ nPoint;
+        break;
+    }
+
+    return point;
   }
 }

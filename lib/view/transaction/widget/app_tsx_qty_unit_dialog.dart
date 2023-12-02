@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/data/product.data.unit.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_point_type.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
+import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -44,13 +43,14 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   fetchData() async {
     loading.value = true;
     qty.value = widget.onCart;
-    units = await ProductUnitData().getProductUnit(widget.product.id!);
+    units = await ProductUnitData().getProductUnit(widget.product.barcode!);
     if (widget.initialUnit == null) {
       unit.value = units.firstWhere((e) => e.isi == 1);
     } else {
       unit.value = widget.initialUnit;
       qty.value = qty.value ~/ unit.value!.isi!;
     }
+    _pointsCalculation();
     loading.value = false;
   }
 
@@ -75,19 +75,12 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
     var nPoint = widget.product.nominalPoint;
     var price =
         unit.value?.getPrice(widget.priceType, widget.product.transaction) ?? 0;
-    var total = price * qty.value;
-    switch (pointType) {
-      case ProductPointType.productQty:
-        point.value = qty.value ~/ nPoint.toInt();
-        break;
-      case ProductPointType.productPrice:
-        point.value = total ~/ nPoint;
-        break;
-      case ProductPointType.totalTransaction:
-        nPoint = GlobalVar.employee!.nominalPoint;
-        point.value = total ~/ nPoint;
-        break;
-    }
+    point.value = FuncHelper().pointsCalculation(
+      qty.value,
+      price,
+      nPoint,
+      pointType,
+    );
   }
 
   bool _stokValidation() {

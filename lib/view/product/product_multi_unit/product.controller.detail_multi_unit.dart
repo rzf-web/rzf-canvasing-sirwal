@@ -34,7 +34,7 @@ class ProductMultiUnitController extends GetxController {
 
   getMultiUnit() async {
     isLoading.value = true;
-    multiSat.value = await ProductUnitData().getProductUnit(data.id!);
+    multiSat.value = await ProductUnitData().getProductUnit(data.barcode!);
     isLoading.value = false;
   }
 

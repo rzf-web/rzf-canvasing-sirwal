@@ -66,6 +66,7 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
   onChanged() {
     var productOnCart = ProductOnCart(
       id: widget.product.id,
+      barcode: widget.product.barcode,
       name: widget.product.name,
       type: widget.product.type,
       category: widget.product.category,

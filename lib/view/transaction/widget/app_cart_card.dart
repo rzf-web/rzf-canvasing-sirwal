@@ -4,6 +4,7 @@ import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/assets.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
+import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -33,6 +34,7 @@ class _AppCartCardState extends State<AppCartCard> {
   var disNominal = 0.0.obs;
 
   var qty = 0.obs;
+  var point = 0.obs;
   var stock = 0.0.obs;
   var baseStock = 0.0;
 
@@ -45,20 +47,23 @@ class _AppCartCardState extends State<AppCartCard> {
     qty.value--;
     _changeUnit();
     _setActiveQty();
+    _pointsCalculation();
   }
 
   addQty() {
     qty.value++;
     _changeUnit();
     _setActiveQty();
+    _pointsCalculation();
   }
 
   _setActiveQty() {
     var stokOnCart = qty.value * unit.value!.isi!;
     //substract
     subActive.value = stokOnCart > 1;
+
     //add
-    var isUnderStock = (stokOnCart + unit.value!.isi!) <= stock.value;
+    var isUnderStock = stokOnCart < stock.value;
     var isBuy = widget.product.transaction.isBuy;
     addActive.value = isUnderStock || isBuy;
   }
@@ -67,11 +72,26 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
   }
 
-  pickUnit(int qty, ProductUnit unit) {
+  _pointsCalculation() {
+    var pointType = widget.product.pointType;
+    var nPoint = widget.product.nominalPoint;
+    var price = unit.value?.getPrice(
+      widget.product.priceType,
+      widget.product.transaction,
+    );
+    point.value = FuncHelper().pointsCalculation(
+      qty.value,
+      price ?? 0,
+      nPoint,
+      pointType,
+    );
+  }
+
+  pickUnit(int qty, ProductUnit unit, int point) {
     Get.back();
     this.unit.value = unit;
     this.qty.value = qty ~/ unit.isi!;
-    if (!widget.product.transaction.isBuy) stock.value = baseStock - qty;
+    this.point.value = point;
     widget.product.onCart = this.qty.value;
     widget.product.unit = unit;
     _setActiveQty();
@@ -80,6 +100,7 @@ class _AppCartCardState extends State<AppCartCard> {
   initialize() {
     unit.value = widget.product.unit;
     qty.value = widget.product.onCart ~/ unit.value!.isi!;
+    point.value = widget.product.pointsEarned;
     baseStock = widget.product.stock;
     stock.value = baseStock;
 
@@ -169,8 +190,21 @@ class _AppCartCardState extends State<AppCartCard> {
                     ),
                   ),
                   Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.only(bottom: 2.0),
+                      child: Text(
+                        "Satuan : ${unit.value!.unit}",
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.capColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Obx(
                     () => Text(
-                      "Satuan : ${unit.value!.unit}",
+                      "Poin : ${point.value}",
                       maxLines: 1,
                       style: const TextStyle(
                         fontSize: 14,

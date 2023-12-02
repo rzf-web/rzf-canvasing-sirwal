@@ -94,12 +94,13 @@ class TsxProductListController extends GetxController {
           priceType: priceType.value,
           onCart: 0,
           initialUnit: null,
-          onDone: (qty, unit) {
+          onDone: (qty, unit, point) {
             Get.back();
             onProductChanged(
               product
                 ..onCart = qty
-                ..unit = unit,
+                ..unit = unit
+                ..pointsEarned = point,
             );
             _setIntoBaseData();
           },

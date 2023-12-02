@@ -15,6 +15,7 @@ class ProductOnCart extends Product with IName {
 
   ProductOnCart({
     required super.id,
+    required super.barcode,
     required super.name,
     required super.type,
     required super.category,
@@ -38,6 +39,7 @@ class ProductOnCart extends Product with IName {
   factory ProductOnCart.fromParent(Product data, TransactionType type) {
     return ProductOnCart(
       id: data.id,
+      barcode: data.barcode,
       name: data.name,
       type: data.type,
       category: data.category,
