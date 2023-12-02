@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/data/product.data.unit.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_point_type.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
@@ -18,7 +20,7 @@ class AppTsxQtyUnitDialog extends StatefulWidget {
   final ProductUnit? initialUnit;
   final ProductOnCart product;
   final ProductUnitPrice priceType;
-  final Function(int, ProductUnit, String) onDone;
+  final Function(int, ProductUnit, int) onDone;
   const AppTsxQtyUnitDialog({
     super.key,
     required this.onDone,
@@ -34,11 +36,10 @@ class AppTsxQtyUnitDialog extends StatefulWidget {
 
 class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   var qty = 0.obs;
+  var point = 0.obs;
   var units = <ProductUnit>[];
   var unit = Rx<ProductUnit?>(null);
-  var group = Rx<String?>(null);
   var loading = false.obs;
-  var groups = <String>['Pribadi', 'Npwp'];
 
   fetchData() async {
     loading.value = true;
@@ -57,8 +58,35 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
     var inputQty = (qty.value * unit.value!.isi!).toInt();
     if (unit.value != null && !loading.value) {
       if (_stokValidation()) {
-        widget.onDone(inputQty, unit.value!, group.value!);
+        widget.onDone(inputQty, unit.value!, point.value);
       }
+    }
+  }
+
+  addQty(int value) {
+    qty.value = value;
+    if (widget.product.transaction.isSale) {
+      _pointsCalculation();
+    }
+  }
+
+  _pointsCalculation() {
+    var pointType = widget.product.pointType;
+    var nPoint = widget.product.nominalPoint;
+    var price =
+        unit.value?.getPrice(widget.priceType, widget.product.transaction) ?? 0;
+    var total = price * qty.value;
+    switch (pointType) {
+      case ProductPointType.productQty:
+        point.value = qty.value ~/ nPoint.toInt();
+        break;
+      case ProductPointType.productPrice:
+        point.value = total ~/ nPoint;
+        break;
+      case ProductPointType.totalTransaction:
+        nPoint = GlobalVar.employee!.nominalPoint;
+        point.value = total ~/ nPoint;
+        break;
     }
   }
 
@@ -87,23 +115,15 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 20.0),
-          if (widget.product.transaction.isBuy)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Obx(
-                () => AppDropDown(
-                  label: "Group",
-                  hintText: "Pilih group",
-                  value: group.value,
-                  items: groups,
-                  onChanged: (v) => group.value = v!,
-                ),
-              ),
-            ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: unitsList(),
           ),
+          if (widget.product.transaction.isSale)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: pointEarned(),
+            ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Row(
@@ -118,7 +138,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
             padding: const EdgeInsets.only(bottom: 20.0),
             child: AppNumKeyboard(
               initial: qty.value,
-              onChanged: (v) => qty.value = v,
+              onChanged: addQty,
             ),
           ),
           AppButton(
@@ -126,6 +146,18 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
             child: const Text("Selesai", style: AppTheme.btnStyle),
           ),
           const SizedBox(height: 16.0),
+        ],
+      ),
+    );
+  }
+
+  Widget pointEarned() {
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Poin"),
+          Text(point.value.toString()),
         ],
       ),
     );
@@ -229,7 +261,8 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
           const Spacer(),
           Text(
             moneyFormatter(
-                e.getPrice(widget.priceType, widget.product.transaction)),
+              e.getPrice(widget.priceType, widget.product.transaction),
+            ),
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ],

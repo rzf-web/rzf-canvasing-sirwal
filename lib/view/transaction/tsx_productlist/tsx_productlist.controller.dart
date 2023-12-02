@@ -94,7 +94,7 @@ class TsxProductListController extends GetxController {
           priceType: priceType.value,
           onCart: 0,
           initialUnit: null,
-          onDone: (qty, unit, group) {
+          onDone: (qty, unit) {
             Get.back();
             onProductChanged(
               product

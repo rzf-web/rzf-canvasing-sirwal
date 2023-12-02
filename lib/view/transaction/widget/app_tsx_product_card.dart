@@ -27,7 +27,7 @@ class AppTsxProductCard extends StatefulWidget {
 
 class _AppTsxProductCardState extends State<AppTsxProductCard> {
   var baseStock = 0.0;
-  var group = '';
+  var point = 0;
   var onCart = 0.obs;
   var stock = 0.0.obs;
   var unit = Rx<ProductUnit?>(null);
@@ -80,6 +80,7 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       pointType: widget.product.pointType,
       priceType: widget.priceType,
       unit: unit.value!,
+      pointsEarned: point,
       onCart: onCart.value,
     );
 
@@ -97,10 +98,10 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
     }
   }
 
-  pickUnit(int qty, ProductUnit unit, String group) {
+  pickUnit(int qty, ProductUnit unit, int point) {
     Get.back();
     onCart.value = qty;
-    this.group = group;
+    this.point = point;
     if (!widget.product.transaction.isBuy) stock.value = baseStock - qty;
     this.unit.value = unit;
     onChanged();

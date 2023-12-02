@@ -67,7 +67,7 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
   }
 
-  pickUnit(int qty, ProductUnit unit, String group) {
+  pickUnit(int qty, ProductUnit unit) {
     Get.back();
     this.unit.value = unit;
     this.qty.value = qty ~/ unit.isi!;
