@@ -8,6 +8,9 @@ class Product with IName {
   final String? id;
   final String? barcode;
   final String name;
+  final String panjang;
+  final String productSize;
+  final String variant;
   final String type;
   final String category;
   final String supplier;
@@ -23,6 +26,9 @@ class Product with IName {
     this.id,
     this.barcode,
     required this.name,
+    required this.panjang,
+    required this.productSize,
+    required this.variant,
     required this.type,
     required this.category,
     required this.supplier,
@@ -40,6 +46,9 @@ class Product with IName {
       id: json['product_id'] ?? "",
       barcode: json['barcode'] ?? "",
       name: json['product_name'] ?? "",
+      panjang: json['panjang'] ?? "",
+      productSize: json['size_name'] ?? "",
+      variant: json['variant_name'] ?? "",
       type: json['type_name'] ?? "",
       category: json['category_name'] ?? "",
       supplier: json['supplier_name'] ?? "",
@@ -96,6 +105,10 @@ class Product with IName {
       'sale_date': FuncHelper().dateToDB(DateTime.now()),
       'stock': stok,
     };
+  }
+
+  String getName() {
+    return '$name $panjang $productSize $variant';
   }
 
   String getInitialProduct() {

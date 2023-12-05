@@ -68,6 +68,9 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       id: widget.product.id,
       barcode: widget.product.barcode,
       name: widget.product.name,
+      panjang: widget.product.panjang,
+      productSize: widget.product.productSize,
+      variant: widget.product.variant,
       type: widget.product.type,
       category: widget.product.category,
       supplier: widget.product.supplier,
@@ -142,8 +145,8 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
-                      widget.product.name,
-                      maxLines: 2,
+                      widget.product.getName(),
+                      maxLines: 5,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16,
@@ -154,7 +157,9 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
                   Obx(
                     () {
                       var price = unit.value!.getPrice(
-                          widget.priceType, widget.product.transaction);
+                        widget.priceType,
+                        widget.product.transaction,
+                      );
                       return Obx(
                         () => Text(
                           "Stok ${doubleFormatter(stock.value)} - ${moneyFormatter(price)}/${unit.value!.unit}",

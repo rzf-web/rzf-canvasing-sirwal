@@ -181,7 +181,6 @@ class TsxProductListController extends GetxController {
       var price = item.unit!.getPrice(priceType.value, transactionType!);
       total.value += price * (item.onCart ~/ item.unit!.isi!);
       point.value += item.pointsEarned;
-      print(item.pointsEarned);
     }
   }
 
