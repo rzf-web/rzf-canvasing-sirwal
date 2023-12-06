@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/assets.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -16,15 +18,21 @@ import 'package:rzf_canvasing_sirwal/widget/app_svg_icon_btn.dart';
 
 class AppCartCard extends StatefulWidget {
   final bool isLast;
+  final Customer? customer;
   final ProductOnCart product;
+  final List<ProductOnCart> similarProducts;
   final Function(ProductOnCart) onRemove;
   final Function() onPointChanged;
+  final Function() onPriceTypeChanged;
   const AppCartCard({
     super.key,
     required this.product,
     required this.isLast,
     required this.onRemove,
     required this.onPointChanged,
+    required this.customer,
+    required this.similarProducts,
+    required this.onPriceTypeChanged,
   });
 
   @override
@@ -50,6 +58,7 @@ class _AppCartCardState extends State<AppCartCard> {
     _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
+    widget.onPriceTypeChanged();
   }
 
   addQty() {
@@ -57,6 +66,7 @@ class _AppCartCardState extends State<AppCartCard> {
     _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
+    widget.onPriceTypeChanged();
   }
 
   _setActiveQty() {
@@ -80,8 +90,8 @@ class _AppCartCardState extends State<AppCartCard> {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
-      widget.product.priceType,
       widget.product.transaction,
+      priceType: getProductPrice(),
     );
     point.value = FuncHelper().pointsCalculation(
       qty.value,
@@ -101,6 +111,7 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.pointsEarned = point;
     _setActiveQty();
     widget.onPointChanged();
+    widget.onPriceTypeChanged();
   }
 
   initialize() {
@@ -117,10 +128,17 @@ class _AppCartCardState extends State<AppCartCard> {
     }
   }
 
+  ProductPriceType getProductPrice() {
+    return FuncHelper().getPriceFromCustomerLevels(
+      qty.value,
+      widget.customer,
+      widget.similarProducts,
+    );
+  }
+
   double _getPrice() {
-    var priceType = widget.product.priceType;
     var transactionType = widget.product.transaction;
-    return unit.value!.getPrice(priceType, transactionType);
+    return unit.value!.getPrice(transactionType, priceType: getProductPrice());
   }
 
   @override
@@ -136,7 +154,8 @@ class _AppCartCardState extends State<AppCartCard> {
         showBottomBar(
           AppTsxQtyUnitDialog(
             product: widget.product,
-            priceType: widget.product.priceType,
+            customer: widget.customer,
+            similarProducts: widget.similarProducts,
             onCart: qty.value * unit.value!.isi!.toInt(),
             initialUnit: unit.value,
             onDone: pickUnit,
@@ -264,7 +283,7 @@ class _AppCartCardState extends State<AppCartCard> {
       children: [
         Expanded(
           child: Text(
-            widget.product.name,
+            widget.product.getName(),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(

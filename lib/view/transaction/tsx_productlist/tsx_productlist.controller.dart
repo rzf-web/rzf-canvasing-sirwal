@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rzf_canvasing_sirwal/data/product.data.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
@@ -25,13 +25,12 @@ class TsxProductListController extends GetxController {
   var isLastPage = false.obs;
   var isLoading = false.obs;
 
-  Customer? customer;
+  var customer = Rx<Customer?>(null);
   var total = 0.0.obs;
   var point = 0.obs;
   var totalProduct = 0.obs;
   var productOnCarts = <ProductOnCart>[].obs;
   var productList = <ProductOnCart>[].obs;
-  var priceType = ProductUnitPrice.retail.obs;
   Timer? debouncer;
   late Function(List<ProductOnCart>) onSave;
 
@@ -72,11 +71,6 @@ class TsxProductListController extends GetxController {
     }
   }
 
-  changePriceType(ProductUnitPrice v) {
-    priceType.value = v;
-    _setIntoBaseData();
-  }
-
   onBtnScanClick() async {
     var data = await Get.toNamed(Routes.scannerView);
     if (data != null) {
@@ -95,7 +89,6 @@ class TsxProductListController extends GetxController {
       showBottomBar(
         AppTsxQtyUnitDialog(
           product: product,
-          priceType: priceType.value,
           onCart: 0,
           initialUnit: null,
           onDone: (qty, unit, point) {
@@ -122,19 +115,21 @@ class TsxProductListController extends GetxController {
   personPage() async {
     var data = await Get.toNamed(Routes.customer, arguments: true);
     if (data != null) {
-      customer = (data as Customer);
-      personController.text = customer!.name;
+      customer.value = (data as Customer);
+      personController.text = customer.value!.name;
     }
   }
 
   onProductChanged(ProductOnCart data) {
-    var productOnCart = productOnCarts.firstWhereOrNull((e) => e.id == data.id);
+    var productOnCart = productOnCarts.firstWhereOrNull(
+      (e) => e.barcode == data.barcode,
+    );
     if (productOnCart == null) {
       if (data.onCart != 0) productOnCarts.add(data);
-      productList.firstWhere((e) => e.id == data.id).onCart = 0;
+      productList.firstWhere((e) => e.barcode == data.barcode).onCart = 0;
     } else {
       if (data.onCart == 0) {
-        productOnCarts.removeWhere((e) => e.id == data.id);
+        productOnCarts.removeWhere((e) => e.barcode == data.barcode);
       } else {
         productOnCart.unit = data.unit;
         productOnCart.onCart = data.onCart;
@@ -144,8 +139,11 @@ class TsxProductListController extends GetxController {
   }
 
   onRemoveFromCart(ProductOnCart data) {
-    productOnCarts.removeWhere((e) => e.id == data.id);
+    productOnCarts.removeWhere(
+      (e) => e.id == data.id && e.barcode == data.barcode,
+    );
     _setIntoBaseData();
+    countTotal();
   }
 
   cartPage() async {
@@ -162,7 +160,7 @@ class TsxProductListController extends GetxController {
   _setIntoBaseData() {
     for (var item in productList) {
       var productOnCart = productOnCarts.firstWhereOrNull(
-        (e) => e.id == item.id,
+        (e) => e.id == item.id && e.barcode == item.barcode,
       );
       if (productOnCart != null) {
         item.unit = productOnCart.unit;
@@ -178,10 +176,24 @@ class TsxProductListController extends GetxController {
     total.value = 0;
     totalProduct.value = productOnCarts.length;
     for (var item in productOnCarts) {
-      var price = item.unit!.getPrice(priceType.value, transactionType!);
+      var price = item.unit!.getPrice(
+        transactionType!,
+        priceType: _getProductPrice(item),
+      );
       total.value += price * (item.onCart ~/ item.unit!.isi!);
       point.value += item.pointsEarned;
     }
+  }
+
+  ProductPriceType _getProductPrice(ProductOnCart data) {
+    var qty = data.onCart;
+    var similarProduct = data.getSimilarProductOnCart(productOnCarts);
+    var priceType = FuncHelper().getPriceFromCustomerLevels(
+      qty,
+      customer.value,
+      similarProduct,
+    );
+    return priceType;
   }
 
   _searchListener() async {

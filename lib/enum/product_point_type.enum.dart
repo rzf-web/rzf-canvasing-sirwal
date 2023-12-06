@@ -1,4 +1,4 @@
-enum ProductPointType { productQty, totalTransaction, productPrice }
+enum ProductPointType { nonPoint, productQty, totalTransaction, productPrice }
 
 extension ProductPointTypeExtension on ProductPointType {
   bool get isProductQty => this == ProductPointType.productQty;
@@ -7,23 +7,27 @@ extension ProductPointTypeExtension on ProductPointType {
 
   String get name {
     switch (this) {
+      case ProductPointType.productQty:
+        return 'Jumlah Produk';
       case ProductPointType.totalTransaction:
         return 'Nominal Transaksi';
       case ProductPointType.productPrice:
         return 'Nominal Produk';
       default:
-        return 'Jumlah Produk';
+        return 'Non Point';
     }
   }
 
   static ProductPointType generatePointType(String jpoin) {
     switch (jpoin.toLowerCase()) {
+      case 'jumlah produk':
+        return ProductPointType.productQty;
       case 'nominal transaksi':
         return ProductPointType.totalTransaction;
       case 'nominal produk':
         return ProductPointType.productPrice;
       default:
-        return ProductPointType.productQty;
+        return ProductPointType.nonPoint;
     }
   }
 }

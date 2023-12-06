@@ -11,27 +11,29 @@ class AppTsxProductList extends GetView<TsxProductListController> {
   @override
   Widget build(BuildContext context) {
     return AppRemoveOverscroll(
-      child: Obx(
-        () => AppSmartRefresh(
-          onRefresh: () => controller.refreshData(),
-          onLoading: () => controller.loadData(),
-          controller: controller.refreshController,
-          noData: controller.isLastPage.value,
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              ...controller.productList().map(
-                    (element) => Obx(
-                      () => AppTsxProductCard(
-                        product: element,
-                        priceType: controller.priceType.value,
-                        onChanged: controller.onProductChanged,
-                      ),
-                    ),
-                  ),
-              const SizedBox(height: 20),
-            ],
-          ),
+      child: AppSmartRefresh(
+        onRefresh: () => controller.refreshData(),
+        onLoading: () => controller.loadData(),
+        controller: controller.refreshController,
+        noData: controller.isLastPage.value,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            ...controller.productList().map(
+              (element) {
+                var similarProducts = element
+                    .getSimilarProductOnCart(controller.productOnCarts)
+                    .obs;
+                return AppTsxProductCard(
+                  product: element,
+                  customer: controller.customer.value,
+                  similarProducts: similarProducts,
+                  onChanged: controller.onProductChanged,
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

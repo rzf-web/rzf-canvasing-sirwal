@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
+import 'package:rzf_canvasing_sirwal/enum/sale_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_drop_down.dart';
 
 class AppTsxDropDownProductPrice extends StatefulWidget {
-  final Function(ProductUnitPrice) onChanged;
+  final Function(SaleType) onChanged;
   const AppTsxDropDownProductPrice({super.key, required this.onChanged});
 
   @override
@@ -14,20 +14,20 @@ class AppTsxDropDownProductPrice extends StatefulWidget {
 
 class _AppTsxDropDownProductPriceState
     extends State<AppTsxDropDownProductPrice> {
-  var priceUnit = ProductUnitPrice.retail.name.capitalizeFirst!.obs;
+  var priceUnit = SaleType.retail.name.capitalizeFirst!.obs;
 
   onChanged(String? v) {
     priceUnit.value = v!;
     widget.onChanged(getProductPrice(v));
   }
 
-  ProductUnitPrice getProductPrice(String string) {
-    for (var item in ProductUnitPrice.values) {
+  SaleType getProductPrice(String string) {
+    for (var item in SaleType.values) {
       if (string.toLowerCase() == item.name) {
         return item;
       }
     }
-    return ProductUnitPrice.retail;
+    return SaleType.retail;
   }
 
   @override
@@ -38,9 +38,7 @@ class _AppTsxDropDownProductPriceState
         label: "Pilih jenis jual",
         value: priceUnit.value,
         onChanged: onChanged,
-        items: ProductUnitPrice.values
-            .map((e) => e.name.capitalizeFirst!)
-            .toList(),
+        items: SaleType.values.map((e) => e.name.capitalizeFirst!).toList(),
       ),
     );
   }

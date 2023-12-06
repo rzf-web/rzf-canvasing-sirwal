@@ -1,4 +1,4 @@
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
 
@@ -11,6 +11,7 @@ class ProductUnit {
   final double grosir3;
   final double grosir6;
   final double grosir12;
+  final double agen;
 
   ProductUnit({
     required this.unit,
@@ -21,6 +22,7 @@ class ProductUnit {
     required this.grosir3,
     required this.grosir6,
     required this.grosir12,
+    required this.agen,
   });
 
   factory ProductUnit.fromJson(Map<String, dynamic> json) {
@@ -33,22 +35,32 @@ class ProductUnit {
       grosir3: FuncHelper().jsonStringToDouble(json['grosir3']),
       grosir6: FuncHelper().jsonStringToDouble(json['grosir6']),
       grosir12: FuncHelper().jsonStringToDouble(json['grosir12']),
+      agen: FuncHelper().jsonStringToDouble(json['agen']),
     );
   }
 
-  double getPrice(ProductUnitPrice v, TransactionType transaction) {
-    var sale = _getSalePrice(v);
+  double getPrice(
+    TransactionType transaction, {
+    ProductPriceType priceType = ProductPriceType.retail,
+  }) {
+    var sale = _getSalePrice(priceType);
     return transaction.isBuy ? buy : sale;
   }
 
-  double _getSalePrice(ProductUnitPrice v) {
-    switch (v) {
-      case ProductUnitPrice.grosir1:
-        return member;
-      case ProductUnitPrice.grosir2:
-        return grosir3;
-      default:
+  double _getSalePrice(ProductPriceType type) {
+    switch (type) {
+      case ProductPriceType.retail:
         return retail;
+      case ProductPriceType.member:
+        return member;
+      case ProductPriceType.grosir3:
+        return grosir3;
+      case ProductPriceType.grosir6:
+        return grosir6;
+      case ProductPriceType.grosir12:
+        return grosir12;
+      case ProductPriceType.agen:
+        return agen;
     }
   }
 }

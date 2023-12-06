@@ -4,7 +4,6 @@ import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/tsx_productlist/tsx_productlist.controller.dart';
-import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_dropdown_product_price.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_product_list.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_product_oncart_btn.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_search_scan.dart';
@@ -40,13 +39,6 @@ class TsxProductList extends GetView<TsxProductListController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 14),
-                if (controller.transactionType!.isSale)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                    child: AppTsxDropDownProductPrice(
-                      onChanged: controller.changePriceType,
-                    ),
-                  ),
                 AppTsxSearchScan(
                   controller: controller.searchController,
                   onBtnClick: controller.onBtnScanClick,

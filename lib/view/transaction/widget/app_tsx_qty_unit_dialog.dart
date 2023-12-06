@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rzf_canvasing_sirwal/data/product.data.unit.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -17,16 +18,18 @@ import 'package:rzf_canvasing_sirwal/widget/app_number_keyboard.dart';
 class AppTsxQtyUnitDialog extends StatefulWidget {
   final int onCart;
   final ProductUnit? initialUnit;
+  final Customer? customer;
   final ProductOnCart product;
-  final ProductUnitPrice priceType;
+  final List<ProductOnCart>? similarProducts;
   final Function(int, ProductUnit, int) onDone;
   const AppTsxQtyUnitDialog({
     super.key,
     required this.onDone,
-    required this.priceType,
     required this.product,
     required this.onCart,
     this.initialUnit,
+    this.customer,
+    this.similarProducts,
   });
 
   @override
@@ -38,6 +41,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   var point = 0.obs;
   var units = <ProductUnit>[];
   var unit = Rx<ProductUnit?>(null);
+  var priceType = ProductPriceType.retail.obs;
   var loading = false.obs;
 
   fetchData() async {
@@ -50,7 +54,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
       unit.value = widget.initialUnit;
       qty.value = qty.value ~/ unit.value!.isi!;
     }
-    _pointsCalculation();
+    // _pointsCalculation();
     loading.value = false;
   }
 
@@ -66,18 +70,29 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   addQty(int value) {
     qty.value = value;
     if (widget.product.transaction.isSale) {
+      priceType.value = getProductPrice();
       _pointsCalculation();
     }
+  }
+
+  ProductPriceType getProductPrice() {
+    return FuncHelper().getPriceFromCustomerLevels(
+      qty.value,
+      widget.customer,
+      widget.similarProducts,
+    );
   }
 
   _pointsCalculation() {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
-    var price =
-        unit.value?.getPrice(widget.priceType, widget.product.transaction) ?? 0;
+    var price = unit.value?.getPrice(
+      widget.product.transaction,
+      priceType: priceType.value,
+    );
     point.value = FuncHelper().pointsCalculation(
       qty.value,
-      price,
+      price ?? 0,
       nPoint,
       pointType,
     );
@@ -96,6 +111,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   @override
   void initState() {
     fetchData();
+    priceType.value = getProductPrice();
     super.initState();
   }
 
@@ -252,11 +268,16 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           const Spacer(),
-          Text(
-            moneyFormatter(
-              e.getPrice(widget.priceType, widget.product.transaction),
+          Obx(
+            () => Text(
+              moneyFormatter(
+                e.getPrice(
+                  widget.product.transaction,
+                  priceType: priceType.value,
+                ),
+              ),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
       ),

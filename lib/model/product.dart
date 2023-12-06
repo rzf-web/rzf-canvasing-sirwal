@@ -1,5 +1,5 @@
 import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_point_type.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_point_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';

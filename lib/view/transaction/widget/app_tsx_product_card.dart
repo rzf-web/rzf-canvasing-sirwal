@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -11,14 +11,16 @@ import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_qty_unit_di
 import 'package:rzf_canvasing_sirwal/widget/app_card_square.dart';
 
 class AppTsxProductCard extends StatefulWidget {
+  final Customer? customer;
   final ProductOnCart product;
-  final ProductUnitPrice priceType;
+  final List<ProductOnCart>? similarProducts;
   final Function(ProductOnCart) onChanged;
   const AppTsxProductCard({
     super.key,
     required this.product,
     required this.onChanged,
-    required this.priceType,
+    this.customer,
+    this.similarProducts,
   });
 
   @override
@@ -40,7 +42,8 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       showBottomBar(
         AppTsxQtyUnitDialog(
           product: widget.product,
-          priceType: widget.priceType,
+          customer: widget.customer,
+          similarProducts: widget.similarProducts,
           onCart: onCart.value,
           initialUnit: unit.value,
           onDone: pickUnit,
@@ -82,7 +85,6 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       stockDisplay: widget.product.stockDisplay,
       nominalPoint: widget.product.nominalPoint,
       pointType: widget.product.pointType,
-      priceType: widget.priceType,
       unit: unit.value!,
       pointsEarned: point,
       onCart: onCart.value,
@@ -157,7 +159,6 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
                   Obx(
                     () {
                       var price = unit.value!.getPrice(
-                        widget.priceType,
                         widget.product.transaction,
                       );
                       return Obx(

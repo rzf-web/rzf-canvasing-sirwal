@@ -1,3 +1,4 @@
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 
 class Customer with IName {
@@ -8,6 +9,7 @@ class Customer with IName {
   final String merk;
   final String model;
   final String alamat;
+  final Map<String, ProductPriceType> levels;
 
   Customer({
     this.id,
@@ -17,6 +19,7 @@ class Customer with IName {
     required this.merk,
     required this.model,
     required this.alamat,
+    required this.levels,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) {
@@ -28,7 +31,20 @@ class Customer with IName {
       merk: json['merk'] ?? "",
       model: json['model'] ?? "",
       alamat: json['address'] ?? "",
+      levels: _generateLevels(json['level']),
     );
+  }
+
+  static Map<String, ProductPriceType> _generateLevels(dynamic json) {
+    var data = <String, ProductPriceType>{};
+    var levels = json as Map<String, dynamic>;
+    for (var key in levels.keys) {
+      if (key != 'jenis') {
+        data[key] = ProductPriceTypeExtension.generateJson(levels[key]);
+      }
+    }
+
+    return data;
   }
 
   String getInitial() {

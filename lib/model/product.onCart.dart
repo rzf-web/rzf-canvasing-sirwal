@@ -1,4 +1,3 @@
-import 'package:rzf_canvasing_sirwal/enum/product_unit.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 import 'package:rzf_canvasing_sirwal/model/product.dart';
@@ -6,7 +5,6 @@ import 'package:rzf_canvasing_sirwal/model/product.unit.dart';
 
 class ProductOnCart extends Product with IName {
   final TransactionType transaction;
-  ProductUnitPrice priceType;
   ProductUnit? unit;
   int pointsEarned;
   double dscPercent;
@@ -32,7 +30,6 @@ class ProductOnCart extends Product with IName {
     required super.stockDisplay,
     required this.transaction,
     required this.onCart,
-    this.priceType = ProductUnitPrice.retail,
     this.unit,
     this.pointsEarned = 0,
     this.dscNominal = 0,
@@ -92,8 +89,15 @@ class ProductOnCart extends Product with IName {
       'isi': unit!.isi!.toInt(),
       'retur': 0,
       'buy': unit!.buy,
-      'sale': unit!.getPrice(priceType, transaction).toInt(),
+      'sale': unit!.getPrice(transaction).toInt(),
       'discount': dscNominal,
     };
+  }
+
+  List<ProductOnCart> getSimilarProductOnCart(List<ProductOnCart> products) {
+    var similarProducts = products.where(
+      (x) => x.id == id && x.barcode != barcode,
+    );
+    return similarProducts.toList();
   }
 }
