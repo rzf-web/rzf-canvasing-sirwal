@@ -8,7 +8,7 @@ import 'package:rzf_canvasing_sirwal/view/transaction/transaction_class.controll
 class SaleAddController extends GetxController implements TsxAddController {
   var clearCart = false.obs;
   @override
-  Future<void> paymentPage(
+  Future<bool> paymentPage(
     List<ProductOnCart> data,
     Customer customer,
   ) async {
@@ -21,6 +21,9 @@ class SaleAddController extends GetxController implements TsxAddController {
     if (result != null) {
       var resultPay = result as Map<String, dynamic>;
       clearCart.value = resultPay['clear'] as bool;
+      return clearCart.value;
+    } else {
+      return false;
     }
   }
 }

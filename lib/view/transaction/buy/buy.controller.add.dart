@@ -9,7 +9,7 @@ class BuyAddController extends GetxController implements TsxAddController {
   var clearCart = false.obs;
 
   @override
-  Future<void> paymentPage(List<ProductOnCart> data, Customer _) async {
+  Future<bool> paymentPage(List<ProductOnCart> data, Customer _) async {
     clearCart.value = false;
     var result = await Get.toNamed(Routes.payment, arguments: {
       "type": TransactionType.buy,
@@ -18,6 +18,9 @@ class BuyAddController extends GetxController implements TsxAddController {
     if (result != null) {
       var resultPay = result as Map<String, dynamic>;
       clearCart.value = resultPay['clear'] as bool;
+      return clearCart.value;
+    } else {
+      return false;
     }
   }
 }

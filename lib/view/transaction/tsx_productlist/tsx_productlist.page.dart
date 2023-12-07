@@ -14,22 +14,19 @@ import 'package:rzf_canvasing_sirwal/widget/app_loading.dart';
 
 class TsxProductList extends GetView<TsxProductListController> {
   final String appBartitle;
-  final bool clearCart;
   final TransactionType type;
-  final Function(List<ProductOnCart>, Customer) onSave;
+  final Future<bool> Function(List<ProductOnCart>, Customer) onSave;
   const TsxProductList({
     super.key,
     required this.type,
     required this.appBartitle,
     required this.onSave,
-    required this.clearCart,
   });
 
   @override
   Widget build(BuildContext context) {
     controller.onSave = onSave;
     controller.transactionType = type;
-    if (clearCart) controller.clearCart();
     return Scaffold(
       appBar: AppCustomAppBar(title: appBartitle),
       body: Obx(

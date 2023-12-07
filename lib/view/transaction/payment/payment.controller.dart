@@ -10,6 +10,7 @@ import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/supplier.dart';
+import 'package:rzf_canvasing_sirwal/model/tsx_account.dart';
 import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_helper.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
@@ -25,6 +26,7 @@ class PaymentController extends GetxController {
   final grandTotalController = TextEditingController();
   final salesController = TextEditingController();
   final dateController = TextEditingController();
+  final accountController = TextEditingController();
   final tempoController = TextEditingController();
   final totalController = TextEditingController();
   final payController = TextEditingController();
@@ -37,6 +39,7 @@ class PaymentController extends GetxController {
   var paymentTypes = <String>['Tunai', 'Kredit'].obs;
   var salesList = <String>[].obs;
   var salesLoading = false.obs;
+  var saleType = Rx<String?>(null);
 
   Supplier? supplier;
   Customer? customer;
@@ -45,6 +48,7 @@ class PaymentController extends GetxController {
   var grandTotal = 0.0;
   var total = 0.0;
   var pay = 0.0;
+  var point = 0.obs;
 
   getSales() async {
     salesLoading.value = true;
@@ -95,14 +99,19 @@ class PaymentController extends GetxController {
       '$url$saleUrl',
       data: {
         'user_id': GlobalVar.userId,
+        'cabang_id': GlobalVar.employee!.idCabang,
+        'cabang': GlobalVar.employee!.cabang,
         'sale_date': dateFormatAPI(transactionDate),
+        'cashier': GlobalVar.employee!.user,
         'customer_id': customer!.id,
         'sales': salesController.text,
+        'account': accountController.text,
+        'sale_type': saleType.value,
         'total': grandTotal,
-        'payment': pay,
         'discount': discount.toInt(),
         'type': paymentType.value,
-        'faktur': fakturController.text,
+        'payment': pay,
+        'point': point.value,
         'note':
             '${isPass() || isTunai() ? "Penjualan" : "Terima DP"} dari ${customer!.name}',
         if (paymentType.value == 'Kredit') 'tempo': dateFormatAPI(tempoDate),
@@ -132,13 +141,13 @@ class PaymentController extends GetxController {
     }
   }
 
-  // accountPage() async {
-  //   var data = await Get.toNamed(Routes.tsxAccount);
-  //   if (data != null) {
-  //     var account = data as TsxAccount;
-  //     accountController.text = account.name;
-  //   }
-  // }
+  accountPage() async {
+    var data = await Get.toNamed(Routes.tsxAccount);
+    if (data != null) {
+      var account = data as TsxAccount;
+      accountController.text = account.name;
+    }
+  }
 
   personPage() async {
     if (type.isBuy) {
@@ -182,10 +191,12 @@ class PaymentController extends GetxController {
     Get.back();
     supplier = null;
     customer = null;
+    saleType.value = null;
     discount = 0;
     total = 0;
     grandTotal = 0;
     pay = 0;
+    point.value = 0;
     transactionDate = DateTime.now();
     tempoDate = DateTime.now();
     dateController.text = dateFormatUI(transactionDate);
@@ -193,7 +204,7 @@ class PaymentController extends GetxController {
     paymentType.value = "Tunai";
     discountController.clear();
     personController.clear();
-    // accountController.clear();
+    accountController.clear();
     fakturController.clear();
     payController.clear();
     grandTotalController.clear();
@@ -320,6 +331,7 @@ class PaymentController extends GetxController {
         item.transaction,
         priceType: getProductPrice(item),
       );
+      point.value += item.pointsEarned;
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
     }
     grandTotal = total;

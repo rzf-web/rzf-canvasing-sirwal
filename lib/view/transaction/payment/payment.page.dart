@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rzf_canvasing_sirwal/enum/sale_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/assets.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -51,13 +52,7 @@ class PaymentPage extends GetView<PaymentController> {
                         const SizedBox(height: padding),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          child: AppTextFieldInput(
-                            label: label,
-                            hintText: hint,
-                            readOnly: true,
-                            controller: controller.personController,
-                            onTap: controller.type.isBuy ? controller.personPage : null,
-                          ),
+                          child: formPickPerson(label, hint),
                         ),
                         if (controller.type.isBuy)
                           Padding(
@@ -81,16 +76,32 @@ class PaymentPage extends GetView<PaymentController> {
                               ),
                             ),
                           ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(bottom: 16.0),
-                        //   child: AppTextFieldInput(
-                        //     label: "Akun",
-                        //     hintText: "Pilih akun",
-                        //     readOnly: true,
-                        //     onTap: controller.accountPage,
-                        //     controller: controller.accountController,
-                        //   ),
-                        // ),
+                        if (controller.type.isSale)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Obx(
+                              () => AppDropDown(
+                                label: "Jenis Jual",
+                                hintText: "Pilih jenis jual",
+                                value: controller.saleType.value,
+                                items: SaleType.values
+                                    .map((e) => e.name.capitalize!)
+                                    .toList(),
+                                onChanged: (v) =>
+                                    controller.saleType.value = v!,
+                              ),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: AppTextFieldInput(
+                            label: "Akun",
+                            hintText: "Pilih akun",
+                            readOnly: true,
+                            onTap: controller.accountPage,
+                            controller: controller.accountController,
+                          ),
+                        ),
                         Obx(
                           () => Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
@@ -194,6 +205,40 @@ class PaymentPage extends GetView<PaymentController> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget formPickPerson(String label, String hint) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: AppTextFieldInput(
+            label: label,
+            hintText: hint,
+            readOnly: true,
+            controller: controller.personController,
+            onTap: controller.type.isBuy ? controller.personPage : null,
+          ),
+        ),
+        if (controller.type.isSale)
+          Container(
+            height: 47,
+            width: 47,
+            margin: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppTheme.textFieldBorderColor),
+              color: Colors.transparent,
+            ),
+            child: Center(
+              child: Text(
+                controller.point.value.toString(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

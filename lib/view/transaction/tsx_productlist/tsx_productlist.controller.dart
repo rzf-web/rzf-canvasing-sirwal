@@ -33,7 +33,7 @@ class TsxProductListController extends GetxController {
   var productOnCarts = <ProductOnCart>[].obs;
   var productList = <ProductOnCart>[].obs;
   Timer? debouncer;
-  late Function(List<ProductOnCart>, Customer) onSave;
+  late Future<bool> Function(List<ProductOnCart>, Customer) onSave;
 
   TsxProductListController(this.transactionType);
 
@@ -109,9 +109,12 @@ class TsxProductListController extends GetxController {
     }
   }
 
-  onCartSave() {
+  onCartSave() async {
     if (customer.value != null && productOnCarts.isNotEmpty) {
-      onSave(productOnCarts, customer.value!);
+      var isClear = await onSave(productOnCarts, customer.value!);
+      if (isClear) {
+        clearCart();
+      }
     } else if (productOnCarts.isEmpty) {
       showDialogAction(
         ActionDialog.warning,
@@ -167,6 +170,8 @@ class TsxProductListController extends GetxController {
 
   clearCart() {
     productOnCarts().clear();
+    customer.value = null;
+    personController.text = '';
     countTotal();
   }
 

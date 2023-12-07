@@ -9,13 +9,10 @@ class SaleAddPage extends GetView<SaleAddController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => TsxProductList(
-        type: TransactionType.sale,
-        appBartitle: "Transaksi Penjualan",
-        onSave: controller.paymentPage,
-        clearCart: controller.clearCart.value,
-      ),
+    return TsxProductList(
+      type: TransactionType.sale,
+      appBartitle: "Transaksi Penjualan",
+      onSave: controller.paymentPage,
     );
   }
 }

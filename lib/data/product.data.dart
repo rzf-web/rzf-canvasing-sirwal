@@ -33,10 +33,10 @@ class ProductData {
     };
   }
 
-  Future<Product?> getSingleProduct(String id) async {
+  Future<Product?> getSingleProduct(String barcode) async {
     var response = await ApiService.get(
       '$url$productUrl',
-      queryParameters: getParamQuery(query: {'product_id': id}),
+      queryParameters: getParamQuery(query: {'barcode': barcode}),
     );
     var success = await manageResponse(response);
     if (success) {

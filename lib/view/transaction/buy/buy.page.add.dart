@@ -14,7 +14,6 @@ class BuyAddPage extends GetView<BuyAddController> {
         type: TransactionType.buy,
         appBartitle: "Transaksi Pembelian",
         onSave: controller.paymentPage,
-        clearCart: controller.clearCart.value,
       ),
     );
   }

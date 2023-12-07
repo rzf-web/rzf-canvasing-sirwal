@@ -83,6 +83,7 @@ class ProductOnCart extends Product with IName {
   Map<String, dynamic> toSaleJson() {
     return {
       'product_id': id,
+      'barcode': barcode,
       'product_name': name,
       'unit_name': unit!.unit,
       'qty': onCart ~/ unit!.isi!.toInt(),
