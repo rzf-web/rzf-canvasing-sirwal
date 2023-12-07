@@ -16,24 +16,32 @@ class AppTsxProductList extends GetView<TsxProductListController> {
         onLoading: () => controller.loadData(),
         controller: controller.refreshController,
         noData: controller.isLastPage.value,
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            ...controller.productList().map(
-              (element) {
-                var similarProducts = element
-                    .getSimilarProductOnCart(controller.productOnCarts)
-                    .obs;
-                return AppTsxProductCard(
-                  product: element,
-                  customer: controller.customer.value,
-                  similarProducts: similarProducts,
-                  onChanged: controller.onProductChanged,
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
+        child: Obx(
+          () => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              ...controller.productList().map(
+                (element) {
+                  var similarProducts = element
+                      .getSimilarProductOnCart(controller.productOnCarts)
+                      .obs;
+                  return AppTsxProductCard(
+                    product: element,
+                    customer: controller.customer.value,
+                    similarProducts: similarProducts,
+                    productOnCart: controller.productOnCarts.firstWhereOrNull(
+                      (e) => e.id == element.id && e.barcode == element.barcode,
+                    ),
+                    onChanged: (v) => {
+                      controller.onProductChanged(v),
+                      similarProducts.refresh(),
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

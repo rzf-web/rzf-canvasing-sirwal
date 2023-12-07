@@ -331,7 +331,7 @@ class PaymentController extends GetxController {
         item.transaction,
         priceType: getProductPrice(item),
       );
-      point.value += item.pointsEarned;
+      point.value += item.pointsEarned.toInt();
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
     }
     grandTotal = total;

@@ -45,7 +45,7 @@ class TsxProductCartPage extends GetView<TsxProductListController> {
                             similarProducts: similarProducts(),
                             onRemove: controller.onRemoveFromCart,
                             onPointChanged: controller.countTotal,
-                            onPriceTypeChanged: similarProducts.refresh,
+                            onQtyChanged: similarProducts.refresh,
                           );
                         },
                       ),

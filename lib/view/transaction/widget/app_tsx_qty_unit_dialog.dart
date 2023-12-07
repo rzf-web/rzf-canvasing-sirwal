@@ -38,7 +38,6 @@ class AppTsxQtyUnitDialog extends StatefulWidget {
 
 class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
   var qty = 0.obs;
-  var point = 0.obs;
   var units = <ProductUnit>[];
   var unit = Rx<ProductUnit?>(null);
   var priceType = ProductPriceType.retail.obs;
@@ -54,7 +53,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
       unit.value = widget.initialUnit;
       qty.value = qty.value ~/ unit.value!.isi!;
     }
-    // _pointsCalculation();
+    _pointsCalculation();
     loading.value = false;
   }
 
@@ -62,7 +61,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
     var inputQty = (qty.value * unit.value!.isi!).toInt();
     if (unit.value != null && !loading.value) {
       if (_stokValidation()) {
-        widget.onDone(inputQty, unit.value!, point.value);
+        widget.onDone(inputQty, unit.value!, _pointsCalculation());
       }
     }
   }
@@ -71,7 +70,6 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
     qty.value = value;
     if (widget.product.transaction.isSale) {
       priceType.value = getProductPrice();
-      _pointsCalculation();
     }
   }
 
@@ -83,18 +81,19 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
     );
   }
 
-  _pointsCalculation() {
+  int _pointsCalculation() {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
       widget.product.transaction,
       priceType: priceType.value,
     );
-    point.value = FuncHelper().pointsCalculation(
+    return FuncHelper().pointsCalculation(
       qty.value,
       price ?? 0,
       nPoint,
       pointType,
+      widget.similarProducts,
     );
   }
 
@@ -128,11 +127,6 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: unitsList(),
           ),
-          if (widget.product.transaction.isSale)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: pointEarned(),
-            ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Row(
@@ -155,18 +149,6 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
             child: const Text("Selesai", style: AppTheme.btnStyle),
           ),
           const SizedBox(height: 16.0),
-        ],
-      ),
-    );
-  }
-
-  Widget pointEarned() {
-    return Obx(
-      () => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("Poin"),
-          Text(point.value.toString()),
         ],
       ),
     );

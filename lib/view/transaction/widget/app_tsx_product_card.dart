@@ -13,6 +13,7 @@ import 'package:rzf_canvasing_sirwal/widget/app_card_square.dart';
 class AppTsxProductCard extends StatefulWidget {
   final Customer? customer;
   final ProductOnCart product;
+  final ProductOnCart? productOnCart;
   final List<ProductOnCart>? similarProducts;
   final Function(ProductOnCart) onChanged;
   const AppTsxProductCard({
@@ -21,6 +22,7 @@ class AppTsxProductCard extends StatefulWidget {
     required this.onChanged,
     this.customer,
     this.similarProducts,
+    this.productOnCart,
   });
 
   @override
@@ -90,12 +92,18 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       onCart: onCart.value,
     );
 
+    if (widget.similarProducts != null) {
+      for (var item in widget.similarProducts!) {
+        item.pointsEarned = point;
+      }
+    }
+
     widget.onChanged(productOnCart);
   }
 
   initialize() {
     unit.value = widget.product.unit ?? widget.product.defaultUnit;
-    onCart.value = widget.product.onCart;
+    onCart.value = widget.productOnCart?.onCart ?? 0;
     baseStock = widget.product.stock;
     if (!widget.product.transaction.isBuy) {
       stock.value = baseStock - onCart.value;

@@ -52,12 +52,20 @@ class FuncHelper {
     double price,
     double nPoint,
     ProductPointType pointType,
+    List<ProductOnCart>? similarProducts,
   ) {
-    var total = price * qty;
+    var qtyOnCart = 0;
     var point = 0;
+    if (similarProducts != null) {
+      for (var item in similarProducts) {
+        qtyOnCart += item.onCart;
+      }
+    }
+    var total = price * (qty + qtyOnCart);
+
     switch (pointType) {
       case ProductPointType.productQty:
-        point = qty ~/ nPoint;
+        point = (qty + qtyOnCart) ~/ nPoint;
         break;
       case ProductPointType.productPrice:
         point = total ~/ nPoint;
@@ -69,7 +77,6 @@ class FuncHelper {
       case ProductPointType.nonPoint:
         break;
     }
-
     return point;
   }
 

@@ -7,6 +7,7 @@ import 'package:rzf_canvasing_sirwal/data/product.data.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
+import 'package:rzf_canvasing_sirwal/helper/extension.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.dart';
@@ -199,6 +200,10 @@ class TsxProductListController extends GetxController {
         priceType: _getProductPrice(item),
       );
       total.value += price * (item.onCart ~/ item.unit!.isi!);
+    }
+
+    var productTmp = [...productOnCarts.unique((e) => e.id, false)];
+    for (var item in productTmp) {
       point.value += item.pointsEarned;
     }
   }

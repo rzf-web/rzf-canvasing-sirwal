@@ -23,7 +23,7 @@ class AppCartCard extends StatefulWidget {
   final List<ProductOnCart> similarProducts;
   final Function(ProductOnCart) onRemove;
   final Function() onPointChanged;
-  final Function() onPriceTypeChanged;
+  final Function() onQtyChanged;
   const AppCartCard({
     super.key,
     required this.product,
@@ -32,7 +32,7 @@ class AppCartCard extends StatefulWidget {
     required this.onPointChanged,
     required this.customer,
     required this.similarProducts,
-    required this.onPriceTypeChanged,
+    required this.onQtyChanged,
   });
 
   @override
@@ -44,7 +44,6 @@ class _AppCartCardState extends State<AppCartCard> {
   var disNominal = 0.0.obs;
 
   var qty = 0.obs;
-  var point = 0.obs;
   var stock = 0.0.obs;
   var baseStock = 0.0;
 
@@ -58,7 +57,7 @@ class _AppCartCardState extends State<AppCartCard> {
     _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
-    widget.onPriceTypeChanged();
+    widget.onQtyChanged();
   }
 
   addQty() {
@@ -66,7 +65,7 @@ class _AppCartCardState extends State<AppCartCard> {
     _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
-    widget.onPriceTypeChanged();
+    widget.onQtyChanged();
   }
 
   _setActiveQty() {
@@ -82,23 +81,33 @@ class _AppCartCardState extends State<AppCartCard> {
 
   _changeUnitPoint() {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
-    widget.product.pointsEarned = point.value;
-    widget.onPointChanged();
   }
 
-  _pointsCalculation() {
+  _pointsCalculation({int? qtyRemove}) {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
       widget.product.transaction,
       priceType: getProductPrice(),
     );
-    point.value = FuncHelper().pointsCalculation(
-      qty.value,
+    var point = FuncHelper().pointsCalculation(
+      qtyRemove ?? qty.value,
       price ?? 0,
       nPoint,
       pointType,
+      widget.similarProducts,
     );
+    widget.product.pointsEarned = point;
+    for (var item in widget.similarProducts) {
+      item.pointsEarned = point;
+    }
+    widget.onPointChanged();
+  }
+
+  onRemove() {
+    _pointsCalculation(qtyRemove: 0);
+    widget.onRemove(widget.product);
+    widget.onQtyChanged();
   }
 
   pickUnit(int qty, ProductUnit unit, int point) {
@@ -106,20 +115,18 @@ class _AppCartCardState extends State<AppCartCard> {
     if (qty != 0) {
       this.unit.value = unit;
       this.qty.value = qty ~/ unit.isi!;
-      this.point.value = point;
       widget.product.onCart = this.qty.value;
       widget.product.unit = unit;
       widget.product.pointsEarned = point;
       _setActiveQty();
       widget.onPointChanged();
-      widget.onPriceTypeChanged();
+      widget.onQtyChanged();
     }
   }
 
   initialize() {
     unit.value = widget.product.unit;
     qty.value = widget.product.onCart ~/ unit.value!.isi!;
-    point.value = widget.product.pointsEarned;
     baseStock = widget.product.stock;
     stock.value = baseStock;
 
@@ -217,21 +224,8 @@ class _AppCartCardState extends State<AppCartCard> {
                     ),
                   ),
                   Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.only(bottom: 2.0),
-                      child: Text(
-                        "Satuan : ${unit.value!.unit}",
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: AppTheme.capColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Obx(
                     () => Text(
-                      "Poin : ${point.value}",
+                      "Satuan : ${unit.value!.unit}",
                       maxLines: 1,
                       style: const TextStyle(
                         fontSize: 14,
@@ -265,7 +259,7 @@ class _AppCartCardState extends State<AppCartCard> {
                       AppSvgIconBtn(
                         svg: svgTrash,
                         color: Colors.red,
-                        onTap: () => widget.onRemove(widget.product),
+                        onTap: onRemove,
                       )
                     ],
                   ),
