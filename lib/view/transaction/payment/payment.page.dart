@@ -55,8 +55,8 @@ class PaymentPage extends GetView<PaymentController> {
                             label: label,
                             hintText: hint,
                             readOnly: true,
-                            onTap: controller.personPage,
                             controller: controller.personController,
+                            onTap: controller.type.isBuy ? controller.personPage : null,
                           ),
                         ),
                         if (controller.type.isBuy)

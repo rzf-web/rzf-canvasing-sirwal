@@ -103,15 +103,17 @@ class _AppCartCardState extends State<AppCartCard> {
 
   pickUnit(int qty, ProductUnit unit, int point) {
     Get.back();
-    this.unit.value = unit;
-    this.qty.value = qty ~/ unit.isi!;
-    this.point.value = point;
-    widget.product.onCart = this.qty.value;
-    widget.product.unit = unit;
-    widget.product.pointsEarned = point;
-    _setActiveQty();
-    widget.onPointChanged();
-    widget.onPriceTypeChanged();
+    if (qty != 0) {
+      this.unit.value = unit;
+      this.qty.value = qty ~/ unit.isi!;
+      this.point.value = point;
+      widget.product.onCart = this.qty.value;
+      widget.product.unit = unit;
+      widget.product.pointsEarned = point;
+      _setActiveQty();
+      widget.onPointChanged();
+      widget.onPriceTypeChanged();
+    }
   }
 
   initialize() {

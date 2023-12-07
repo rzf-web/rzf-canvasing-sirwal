@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/tsx_productlist/tsx_productlist.controller.dart';
@@ -15,7 +16,7 @@ class TsxProductList extends GetView<TsxProductListController> {
   final String appBartitle;
   final bool clearCart;
   final TransactionType type;
-  final Function(List<ProductOnCart>) onSave;
+  final Function(List<ProductOnCart>, Customer) onSave;
   const TsxProductList({
     super.key,
     required this.type,

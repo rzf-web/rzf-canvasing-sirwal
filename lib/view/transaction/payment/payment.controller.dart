@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/data/sales.data.dart';
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
+import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/model/supplier.dart';
@@ -20,7 +22,6 @@ class PaymentController extends GetxController {
   final data = Get.arguments as Map<String, dynamic>;
 
   final fakturController = TextEditingController();
-  // final accountController = TextEditingController();
   final grandTotalController = TextEditingController();
   final salesController = TextEditingController();
   final dateController = TextEditingController();
@@ -303,20 +304,36 @@ class PaymentController extends GetxController {
     getSales();
     type = data['type']!;
     products = data['data']! as List<ProductOnCart>;
+    customer = data['customer'] as Customer?;
     _countTotal();
     totalController.text = moneyFormatter(total);
     grandTotalController.text = moneyFormatter(grandTotal);
     dateController.text = dateFormatUI(transactionDate);
     tempoController.text = dateFormatUI(transactionDate);
+    personController.text = customer?.name ?? '';
     getMoneySugest();
   }
 
   _countTotal() {
     for (var item in products) {
-      var price = item.unit!.getPrice(item.transaction);
+      var price = item.unit!.getPrice(
+        item.transaction,
+        priceType: getProductPrice(item),
+      );
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
     }
     grandTotal = total;
+  }
+
+  ProductPriceType getProductPrice(ProductOnCart data) {
+    var qty = data.onCart;
+    var similarProduct = data.getSimilarProductOnCart(products);
+    var priceType = FuncHelper().getPriceFromCustomerLevels(
+      qty,
+      customer,
+      similarProduct,
+    );
+    return priceType;
   }
 
   @override

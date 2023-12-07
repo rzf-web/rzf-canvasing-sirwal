@@ -1,3 +1,4 @@
+import 'package:rzf_canvasing_sirwal/model/customer.dart';
 import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 
 abstract class TsxListController<T> {
@@ -8,5 +9,5 @@ abstract class TsxListController<T> {
 }
 
 abstract class TsxAddController {
-  void paymentPage(List<ProductOnCart> data);
+  void paymentPage(List<ProductOnCart> data, Customer customer);
 }

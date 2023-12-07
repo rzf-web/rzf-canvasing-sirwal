@@ -14,6 +14,7 @@ import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/tsx_productlist/tsx_cart.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_tsx_qty_unit_dialog.dart';
+import 'package:rzf_canvasing_sirwal/widget/app_dialog_action.dart';
 
 class TsxProductListController extends GetxController {
   TransactionType? transactionType;
@@ -32,7 +33,7 @@ class TsxProductListController extends GetxController {
   var productOnCarts = <ProductOnCart>[].obs;
   var productList = <ProductOnCart>[].obs;
   Timer? debouncer;
-  late Function(List<ProductOnCart>) onSave;
+  late Function(List<ProductOnCart>, Customer) onSave;
 
   TsxProductListController(this.transactionType);
 
@@ -109,7 +110,19 @@ class TsxProductListController extends GetxController {
   }
 
   onCartSave() {
-    onSave(productOnCarts);
+    if (customer.value != null && productOnCarts.isNotEmpty) {
+      onSave(productOnCarts, customer.value!);
+    } else if (productOnCarts.isEmpty) {
+      showDialogAction(
+        ActionDialog.warning,
+        'Anda belum memilih product ',
+      );
+    } else {
+      showDialogAction(
+        ActionDialog.warning,
+        'Silahkan pilih pelanggan terlebih dahulu',
+      );
+    }
   }
 
   personPage() async {
