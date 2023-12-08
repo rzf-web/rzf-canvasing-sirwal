@@ -108,10 +108,10 @@ class FuncHelper {
     var similarProductQty = 0;
     if (similarProducts != null) {
       for (var item in similarProducts) {
-        similarProductQty = item.onCart;
+        similarProductQty += item.onCart;
       }
     }
-    var level = FuncHelper().getProductPriceLevelFromQtyLevel(
+    var level = getProductPriceLevelFromQtyLevel(
       qty + similarProductQty,
     );
     var priceType = customer?.levels[level];

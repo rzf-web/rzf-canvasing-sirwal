@@ -11,13 +11,13 @@ class AppTsxProductList extends GetView<TsxProductListController> {
   @override
   Widget build(BuildContext context) {
     return AppRemoveOverscroll(
-      child: AppSmartRefresh(
-        onRefresh: () => controller.refreshData(),
-        onLoading: () => controller.loadData(),
-        controller: controller.refreshController,
-        noData: controller.isLastPage.value,
-        child: Obx(
-          () => ListView(
+      child: Obx(
+        () => AppSmartRefresh(
+          onRefresh: () => controller.refreshData(),
+          onLoading: () => controller.loadData(),
+          controller: controller.refreshController,
+          noData: controller.isLastPage.value,
+          child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
               ...controller.productList().map(
