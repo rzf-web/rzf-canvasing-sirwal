@@ -5,6 +5,7 @@ import 'package:rzf_canvasing_sirwal/data/sales.data.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
+import 'package:rzf_canvasing_sirwal/helper/extension.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/model/customer.dart';
@@ -335,8 +336,11 @@ class PaymentController extends GetxController {
         item.transaction,
         priceType: getProductPrice(item),
       );
-      point.value += item.pointsEarned.toInt();
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
+    }
+    var productTmp = [...products.unique((e) => e.id, false)];
+    for (var item in productTmp) {
+      point.value += item.pointsEarned;
     }
     grandTotal = total;
   }
