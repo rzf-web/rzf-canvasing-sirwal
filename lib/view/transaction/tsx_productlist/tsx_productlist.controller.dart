@@ -113,8 +113,10 @@ class TsxProductListController extends GetxController {
   onCartSave() async {
     if (customer.value != null && productOnCarts.isNotEmpty) {
       var isClear = await onSave(productOnCarts, customer.value!);
+      print(isClear);
       if (isClear) {
         clearCart();
+        countTotal();
       }
     } else if (productOnCarts.isEmpty) {
       showDialogAction(

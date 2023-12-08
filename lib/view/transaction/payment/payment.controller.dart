@@ -215,6 +215,10 @@ class PaymentController extends GetxController {
     getMoneySugest();
   }
 
+  getBack() {
+    Get.back(result: {"clear": products.isEmpty});
+  }
+
   ///Method untuk menampilkan
   ///uang money suggestion pada pembayaran
   getMoneySugest() {

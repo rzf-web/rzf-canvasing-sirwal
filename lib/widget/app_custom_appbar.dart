@@ -13,6 +13,7 @@ class AppCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final Widget? child;
   final List<Widget>? actions;
+  final Function()? onLeadingTap;
   const AppCustomAppBar({
     super.key,
     required this.title,
@@ -22,6 +23,7 @@ class AppCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showLeading = true,
     this.hideAppBar = false,
     this.showBorder = true,
+    this.onLeadingTap,
   });
 
   @override
@@ -48,7 +50,7 @@ class AppCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       svg: svgArrowLeft,
       size: 20,
       color: AppTheme.titleColor,
-      onTap: Get.back,
+      onTap: onLeadingTap ?? Get.back,
     );
   }
 

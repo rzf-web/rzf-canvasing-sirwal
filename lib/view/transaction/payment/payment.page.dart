@@ -27,13 +27,14 @@ class PaymentPage extends GetView<PaymentController> {
       child: Scaffold(
         appBar: AppCustomAppBar(
           title: "Pembayaran",
+          onLeadingTap: controller.getBack,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: AppSvgIconBtn(
                 svg: svgQrcode,
                 onTap: () {
-                  Get.back(result: {"clear": controller.products.isEmpty});
+                  controller.getBack();
                   Get.back();
                 },
               ),
