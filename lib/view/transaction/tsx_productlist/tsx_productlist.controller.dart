@@ -204,7 +204,7 @@ class TsxProductListController extends GetxController {
       total.value += price * (item.onCart ~/ item.unit!.isi!);
     }
 
-    if (customer.value != null) {
+    if (customer.value?.type.isMember ?? false) {
       var productTmp = [...productOnCarts.unique((e) => e.id, false)];
       for (var item in productTmp) {
         point.value += item.pointsEarned;

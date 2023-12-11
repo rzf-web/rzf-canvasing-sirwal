@@ -81,17 +81,21 @@ class ProductOnCart extends Product with IName {
     };
   }
 
-  Map<String, dynamic> toSaleJson(ProductPriceType priceType) {
+  Map<String, dynamic> toSaleJson(
+    ProductPriceType priceType,
+    ProductPriceType priceLevel1,
+  ) {
     return {
       'product_id': id,
       'barcode': barcode,
-      'product_name': name,
+      'product_name': getName(),
       'unit_name': unit!.unit,
       'qty': onCart ~/ unit!.isi!.toInt(),
       'isi': unit!.isi!.toInt(),
       'retur': 0,
       'buy': unit!.buy,
-      'sale': unit!.getPrice(transaction).toInt(),
+      'sale': unit!.getPrice(transaction, priceType: priceType).toInt(),
+      'price': unit!.getPrice(transaction, priceType: priceLevel1).toInt(),
       'discount': dscNominal,
     };
   }

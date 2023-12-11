@@ -83,21 +83,22 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
   }
 
-  _pointsCalculation({int? qtyRemove}) {
+  _pointsCalculation({bool isRemove = false}) {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
       widget.product.transaction,
-      priceType: getProductPrice(),
+      priceType: getProductPrice(qtyRmove: isRemove ? 0 : null),
     );
     var point = FuncHelper().pointsCalculation(
-      qtyRemove ?? qty.value,
+      isRemove ? 0 : qty.value,
       price ?? 0,
       nPoint,
       pointType,
       widget.similarProducts,
     );
     widget.product.pointsEarned = point;
+
     for (var item in widget.similarProducts) {
       item.pointsEarned = point;
     }
@@ -105,9 +106,9 @@ class _AppCartCardState extends State<AppCartCard> {
   }
 
   onRemove() {
-    _pointsCalculation(qtyRemove: 0);
     widget.onRemove(widget.product);
     widget.onQtyChanged();
+    _pointsCalculation(isRemove: true);
   }
 
   pickUnit(int qty, ProductUnit unit, int point) {
@@ -121,19 +122,6 @@ class _AppCartCardState extends State<AppCartCard> {
       _setActiveQty();
       widget.onPointChanged();
       widget.onQtyChanged();
-    }
-  }
-
-  initialize() {
-    unit.value = widget.product.unit;
-    qty.value = widget.product.onCart ~/ unit.value!.isi!;
-    baseStock = widget.product.stock;
-    stock.value = baseStock;
-
-    _setActiveQty();
-    if (widget.product.dscNominal != 0) {
-      disNominal.value = widget.product.dscNominal;
-      disPrecent.value = (disNominal.value / _getPrice()) * 100;
     }
   }
 
@@ -158,9 +146,9 @@ class _AppCartCardState extends State<AppCartCard> {
     );
   }
 
-  ProductPriceType getProductPrice() {
+  ProductPriceType getProductPrice({int? qtyRmove}) {
     return FuncHelper().getPriceFromCustomerLevels(
-      qty.value,
+      qtyRmove ?? qty.value,
       widget.customer,
       widget.similarProducts,
     );
@@ -169,6 +157,19 @@ class _AppCartCardState extends State<AppCartCard> {
   double _getPrice() {
     var transactionType = widget.product.transaction;
     return unit.value!.getPrice(transactionType, priceType: getProductPrice());
+  }
+
+  initialize() {
+    unit.value = widget.product.unit;
+    qty.value = widget.product.onCart ~/ unit.value!.isi!;
+    baseStock = widget.product.stock;
+    stock.value = baseStock;
+
+    _setActiveQty();
+    if (widget.product.dscNominal != 0) {
+      disNominal.value = widget.product.dscNominal;
+      disPrecent.value = (disNominal.value / _getPrice()) * 100;
+    }
   }
 
   @override

@@ -102,8 +102,8 @@ class PaymentController extends GetxController {
         'user_id': GlobalVar.userId,
         'cabang_id': GlobalVar.employee!.idCabang,
         'cabang': GlobalVar.employee!.cabang,
-        'sale_date': dateFormatAPI(transactionDate),
         'cashier': GlobalVar.employee!.user,
+        'sale_date': dateFormatAPI(transactionDate),
         'customer_id': customer!.id,
         'sales': salesController.text,
         'account': accountController.text,
@@ -112,7 +112,7 @@ class PaymentController extends GetxController {
         'discount': discount.toInt(),
         'type': paymentType.value,
         'payment': pay,
-        'point': point.value,
+        'poin': point.value,
         'note':
             '${isPass() || isTunai() ? "Penjualan" : "Terima DP"} dari ${customer!.name}',
         if (paymentType.value == 'Kredit') 'tempo': dateFormatAPI(tempoDate),
@@ -122,7 +122,9 @@ class PaymentController extends GetxController {
     Get.back();
     var success = await manageResponse(response);
     if (success) {
+      var data = getDataResponse(response);
       Get.to(const PaySuccessPage());
+      print(data);
     }
   }
 
@@ -266,7 +268,14 @@ class PaymentController extends GetxController {
         customer,
         item.getSimilarProductOnCart(products),
       );
-      data.add(type.isBuy ? item.toBuyJson() : item.toSaleJson(priceType));
+      var priceLevel1 = FuncHelper().getPriceFromCustomerLevels(
+        1,
+        customer,
+        [],
+      );
+      data.add(
+        type.isBuy ? item.toBuyJson() : item.toSaleJson(priceType, priceLevel1),
+      );
     }
     return data;
   }
@@ -341,9 +350,11 @@ class PaymentController extends GetxController {
       );
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
     }
-    var productTmp = [...products.unique((e) => e.id, false)];
-    for (var item in productTmp) {
-      point.value += item.pointsEarned;
+    if (customer?.type.isMember ?? false) {
+      var productTmp = [...products.unique((e) => e.id, false)];
+      for (var item in productTmp) {
+        point.value += item.pointsEarned;
+      }
     }
     grandTotal = total;
   }

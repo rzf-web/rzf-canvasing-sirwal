@@ -1,3 +1,4 @@
+import 'package:rzf_canvasing_sirwal/enum/customer_type.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 
@@ -9,6 +10,7 @@ class Customer with IName {
   final String merk;
   final String model;
   final String alamat;
+  final CustomerType type;
   final Map<String, ProductPriceType> levels;
 
   Customer({
@@ -19,6 +21,7 @@ class Customer with IName {
     required this.merk,
     required this.model,
     required this.alamat,
+    required this.type,
     required this.levels,
   });
 
@@ -31,6 +34,7 @@ class Customer with IName {
       merk: json['merk'] ?? "",
       model: json['model'] ?? "",
       alamat: json['address'] ?? "",
+      type: CustomerType.fromJson(json['member']),
       levels: _generateLevels(json['level']),
     );
   }
