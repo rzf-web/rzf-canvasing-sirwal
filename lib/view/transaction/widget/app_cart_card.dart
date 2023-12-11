@@ -88,7 +88,7 @@ class _AppCartCardState extends State<AppCartCard> {
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
       widget.product.transaction,
-      priceType: getProductPrice(qtyRmove: isRemove ? 0 : null),
+      priceType: getPriceType(qtyRmove: isRemove ? 0 : null),
     );
     var point = FuncHelper().pointsCalculation(
       isRemove ? 0 : qty.value,
@@ -146,7 +146,7 @@ class _AppCartCardState extends State<AppCartCard> {
     );
   }
 
-  ProductPriceType getProductPrice({int? qtyRmove}) {
+  ProductPriceType getPriceType({int? qtyRmove}) {
     return FuncHelper().getPriceFromCustomerLevels(
       qtyRmove ?? qty.value,
       widget.customer,
@@ -156,7 +156,7 @@ class _AppCartCardState extends State<AppCartCard> {
 
   double _getPrice() {
     var transactionType = widget.product.transaction;
-    return unit.value!.getPrice(transactionType, priceType: getProductPrice());
+    return unit.value!.getPrice(transactionType, priceType: getPriceType());
   }
 
   int similarProductQty() {

@@ -106,4 +106,17 @@ class ProductOnCart extends Product with IName {
     );
     return similarProducts.toList();
   }
+
+  int getSimilarProductOnCartQty(List<ProductOnCart> products) {
+    var qty = onCart;
+
+    var similarProducts = products.where(
+      (x) => x.id == id && x.barcode != barcode,
+    );
+
+    for (var item in similarProducts) {
+      qty += item.onCart;
+    }
+    return qty;
+  }
 }

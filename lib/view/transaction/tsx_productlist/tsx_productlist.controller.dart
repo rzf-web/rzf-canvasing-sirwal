@@ -135,21 +135,7 @@ class TsxProductListController extends GetxController {
     if (data != null) {
       customer.value = (data as Customer);
       personController.text = customer.value!.name;
-      for (var item in productOnCarts) {
-        var price = item.unit!.getPrice(
-          transactionType!,
-          priceType: _getProductPrice(item),
-        );
-        var point = FuncHelper().pointsCalculation(
-          item.onCart,
-          price,
-          item.dscNominal,
-          item.nominalPoint,
-          item.pointType,
-          item.getSimilarProductOnCart(productOnCarts),
-        );
-        item.pointsEarned = point;
-      }
+      customer.value!.setListPoint(productOnCarts);
       countTotal();
     }
   }
@@ -214,7 +200,7 @@ class TsxProductListController extends GetxController {
     for (var item in productOnCarts) {
       var price = item.unit!.getPrice(
         transactionType!,
-        priceType: _getProductPrice(item),
+        priceType: _getPriceType(item),
       );
       total.value += price * (item.onCart ~/ item.unit!.isi!);
     }
@@ -227,7 +213,7 @@ class TsxProductListController extends GetxController {
     }
   }
 
-  ProductPriceType _getProductPrice(ProductOnCart data) {
+  ProductPriceType _getPriceType(ProductOnCart data) {
     var qty = data.onCart;
     var similarProduct = data.getSimilarProductOnCart(productOnCarts);
     var priceType = FuncHelper().getPriceFromCustomerLevels(

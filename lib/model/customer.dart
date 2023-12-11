@@ -1,6 +1,8 @@
 import 'package:rzf_canvasing_sirwal/enum/customer_type.dart';
 import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
+import 'package:rzf_canvasing_sirwal/helper/method.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
+import 'package:rzf_canvasing_sirwal/model/product.onCart.dart';
 
 class Customer with IName {
   final String? id;
@@ -53,5 +55,26 @@ class Customer with IName {
 
   String getInitial() {
     return super.getInitialName(name);
+  }
+
+  setListPoint(List<ProductOnCart> products) {
+    for (var item in products) {
+      var level = FuncHelper().getProductPriceLevelFromQtyLevel(
+        item.getSimilarProductOnCartQty(products),
+      );
+      var price = item.unit!.getPrice(
+        item.transaction,
+        priceType: levels[level]!,
+      );
+      var point = FuncHelper().pointsCalculation(
+        item.onCart,
+        price,
+        item.dscNominal,
+        item.nominalPoint,
+        item.pointType,
+        item.getSimilarProductOnCart(products),
+      );
+      item.pointsEarned = point;
+    }
   }
 }
