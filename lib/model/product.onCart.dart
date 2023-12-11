@@ -1,3 +1,4 @@
+import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/interface/iname.dart';
 import 'package:rzf_canvasing_sirwal/model/product.dart';
@@ -80,7 +81,7 @@ class ProductOnCart extends Product with IName {
     };
   }
 
-  Map<String, dynamic> toSaleJson() {
+  Map<String, dynamic> toSaleJson(ProductPriceType priceType) {
     return {
       'product_id': id,
       'barcode': barcode,

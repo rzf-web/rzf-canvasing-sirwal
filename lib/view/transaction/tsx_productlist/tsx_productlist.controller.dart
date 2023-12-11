@@ -135,6 +135,7 @@ class TsxProductListController extends GetxController {
     if (data != null) {
       customer.value = (data as Customer);
       personController.text = customer.value!.name;
+      countTotal();
     }
   }
 
@@ -203,9 +204,11 @@ class TsxProductListController extends GetxController {
       total.value += price * (item.onCart ~/ item.unit!.isi!);
     }
 
-    var productTmp = [...productOnCarts.unique((e) => e.id, false)];
-    for (var item in productTmp) {
-      point.value += item.pointsEarned;
+    if (customer.value != null) {
+      var productTmp = [...productOnCarts.unique((e) => e.id, false)];
+      for (var item in productTmp) {
+        point.value += item.pointsEarned;
+      }
     }
   }
 

@@ -16,7 +16,6 @@ class SplashScreenPage extends StatefulWidget {
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
   Future initialize() async {
-    // await SqlService.createTables();
     await SharedPrefs.load();
     if (GlobalVar.userId != 0) {
       await ProfileData().fetchApiData();

@@ -137,6 +137,27 @@ class _AppCartCardState extends State<AppCartCard> {
     }
   }
 
+  double getPricePercentaseFromLevel1Price() {
+    var level1Price = _getLevel1Price();
+    var nowPrice = _getPrice();
+    var difference = level1Price - nowPrice;
+    var percentase = (difference / level1Price) * 100;
+
+    return percentase;
+  }
+
+  double _getLevel1Price() {
+    var transactionType = widget.product.transaction;
+    return unit.value!.getPrice(
+      transactionType,
+      priceType: FuncHelper().getPriceFromCustomerLevels(
+        1,
+        widget.customer,
+        [],
+      ),
+    );
+  }
+
   ProductPriceType getProductPrice() {
     return FuncHelper().getPriceFromCustomerLevels(
       qty.value,
@@ -195,6 +216,34 @@ class _AppCartCardState extends State<AppCartCard> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: namePrice(),
                   ),
+                  if (qty.value > 2)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2.0),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Hemat : ",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.capColor,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: numberFormatter(_getLevel1Price()),
+                              style: const TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  "   ${percentFormatter(getPricePercentaseFromLevel1Price())}%",
+                              style: const TextStyle(
+                                color: AppTheme.primaryColor,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 2.0),
                     child: Obx(

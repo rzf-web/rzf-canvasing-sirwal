@@ -261,9 +261,12 @@ class PaymentController extends GetxController {
   List<Map<String, dynamic>> _productsToJson() {
     var data = <Map<String, dynamic>>[];
     for (var item in products) {
-      data.add(
-        type.isBuy ? item.toBuyJson() : item.toSaleJson(),
+      var priceType = FuncHelper().getPriceFromCustomerLevels(
+        item.onCart,
+        customer,
+        item.getSimilarProductOnCart(products),
       );
+      data.add(type.isBuy ? item.toBuyJson() : item.toSaleJson(priceType));
     }
     return data;
   }

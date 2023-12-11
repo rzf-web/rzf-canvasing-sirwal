@@ -47,6 +47,7 @@ getParamQuery({Map<String, dynamic>? query}) {
   Map<String, dynamic> paramQuery = {
     "user_id": GlobalVar.userId,
     if (emp != null) 'cabang_id': emp.idCabang,
+    if (emp != null) 'cashier': emp.user,
   };
 
   if (query != null) {
