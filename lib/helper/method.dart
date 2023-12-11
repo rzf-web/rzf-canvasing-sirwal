@@ -50,6 +50,7 @@ class FuncHelper {
   int pointsCalculation(
     int qty,
     double price,
+    double discount,
     double nPoint,
     ProductPointType pointType,
     List<ProductOnCart>? similarProducts,
@@ -61,8 +62,7 @@ class FuncHelper {
         qtyOnCart += item.onCart;
       }
     }
-    var total = price * (qty + qtyOnCart);
-
+    var total = (price - discount) * (qty + qtyOnCart);
     switch (pointType) {
       case ProductPointType.productQty:
         point = (qty + qtyOnCart) ~/ nPoint;

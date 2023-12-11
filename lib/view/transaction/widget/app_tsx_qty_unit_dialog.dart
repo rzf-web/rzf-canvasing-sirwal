@@ -88,13 +88,18 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
       widget.product.transaction,
       priceType: priceType.value,
     );
-    return FuncHelper().pointsCalculation(
-      qty.value,
-      price ?? 0,
-      nPoint,
-      pointType,
-      widget.similarProducts,
-    );
+    if (widget.customer != null) {
+      return FuncHelper().pointsCalculation(
+        qty.value,
+        price ?? 0,
+        widget.product.dscNominal,
+        nPoint,
+        pointType,
+        widget.similarProducts,
+      );
+    } else {
+      return 0;
+    }
   }
 
   bool _stokValidation() {

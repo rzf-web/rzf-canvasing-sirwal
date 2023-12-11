@@ -135,6 +135,21 @@ class TsxProductListController extends GetxController {
     if (data != null) {
       customer.value = (data as Customer);
       personController.text = customer.value!.name;
+      for (var item in productOnCarts) {
+        var price = item.unit!.getPrice(
+          transactionType!,
+          priceType: _getProductPrice(item),
+        );
+        var point = FuncHelper().pointsCalculation(
+          item.onCart,
+          price,
+          item.dscNominal,
+          item.nominalPoint,
+          item.pointType,
+          item.getSimilarProductOnCart(productOnCarts),
+        );
+        item.pointsEarned = point;
+      }
       countTotal();
     }
   }

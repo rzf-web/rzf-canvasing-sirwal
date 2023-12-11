@@ -83,7 +83,7 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
   }
 
-  _pointsCalculation({bool isRemove = false}) {
+  _pointsCalculation({bool isRemove = false, bool runPointChangedFunc = true}) {
     var pointType = widget.product.pointType;
     var nPoint = widget.product.nominalPoint;
     var price = unit.value?.getPrice(
@@ -93,12 +93,12 @@ class _AppCartCardState extends State<AppCartCard> {
     var point = FuncHelper().pointsCalculation(
       isRemove ? 0 : qty.value,
       price ?? 0,
+      disNominal.value,
       nPoint,
       pointType,
       widget.similarProducts,
     );
     widget.product.pointsEarned = point;
-
     for (var item in widget.similarProducts) {
       item.pointsEarned = point;
     }
@@ -159,6 +159,14 @@ class _AppCartCardState extends State<AppCartCard> {
     return unit.value!.getPrice(transactionType, priceType: getProductPrice());
   }
 
+  int similarProductQty() {
+    var qty = 0;
+    for (var item in widget.similarProducts) {
+      qty += item.onCart;
+    }
+    return qty;
+  }
+
   initialize() {
     unit.value = widget.product.unit;
     qty.value = widget.product.onCart ~/ unit.value!.isi!;
@@ -217,7 +225,7 @@ class _AppCartCardState extends State<AppCartCard> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: namePrice(),
                   ),
-                  if (qty.value > 2)
+                  if ((qty.value + similarProductQty()) > 2)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 2.0),
                       child: Text.rich(
@@ -301,6 +309,7 @@ class _AppCartCardState extends State<AppCartCard> {
                                 disNominal.value = nominal;
                                 widget.product.dscNominal = disNominal.value;
                                 widget.product.dscPercent = disPrecent.value;
+                                _pointsCalculation();
                               },
                             ),
                           ),

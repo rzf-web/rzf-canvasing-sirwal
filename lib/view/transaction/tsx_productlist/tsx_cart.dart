@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
-import 'package:rzf_canvasing_sirwal/view/transaction/tsx_productlist/tsx_productlist.controller.dart';
-import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_cart_card.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_custom_appbar.dart';
+import 'package:rzf_canvasing_sirwal/widget/app_text_field_input.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_fixed_bottom_btn.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_remove_overscroll.dart';
-import 'package:rzf_canvasing_sirwal/widget/app_text_field_input.dart';
+import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_cart_card.dart';
+import 'package:rzf_canvasing_sirwal/view/transaction/tsx_productlist/tsx_productlist.controller.dart';
 
 class TsxProductCartPage extends GetView<TsxProductListController> {
   const TsxProductCartPage({super.key});
@@ -33,19 +33,22 @@ class TsxProductCartPage extends GetView<TsxProductListController> {
                     children: [
                       ...controller.productOnCarts().map(
                         (e) {
-                          var similarProducts = e
-                              .getSimilarProductOnCart(
-                                controller.productOnCarts,
-                              )
-                              .obs;
-                          return AppCartCard(
-                            product: e,
-                            isLast: controller.productOnCarts().last.id == e.id,
-                            customer: controller.customer.value,
-                            similarProducts: similarProducts(),
-                            onRemove: controller.onRemoveFromCart,
-                            onPointChanged: controller.countTotal,
-                            onQtyChanged: similarProducts.refresh,
+                          var data = controller.productOnCarts;
+                          var similarProducts =
+                              e.getSimilarProductOnCart(data).obs;
+                          return Obx(
+                            () {
+                              return AppCartCard(
+                                product: e,
+                                isLast:
+                                    controller.productOnCarts().last.id == e.id,
+                                customer: controller.customer.value,
+                                similarProducts: similarProducts(),
+                                onRemove: controller.onRemoveFromCart,
+                                onPointChanged: controller.countTotal,
+                                onQtyChanged: similarProducts.refresh,
+                              );
+                            },
                           );
                         },
                       ),

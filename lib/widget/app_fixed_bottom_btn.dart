@@ -4,6 +4,7 @@ import 'package:rzf_canvasing_sirwal/widget/app_button.dart';
 
 class AppFixedBottomBtn extends StatelessWidget {
   final String? text;
+  final Widget? widgetUpperBtn;
   final Widget? child;
   final double? radius;
   final Color? bgColor;
@@ -19,6 +20,7 @@ class AppFixedBottomBtn extends StatelessWidget {
     this.bgColor,
     this.showShadow = true,
     this.isLoading = false,
+    this.widgetUpperBtn,
   });
 
   @override
@@ -41,12 +43,19 @@ class AppFixedBottomBtn extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(padding, 16, padding, padding),
-          child: AppButton(
-            isLoading: isLoading,
-            onPressed: onPressed,
-            borderRadius: radius,
-            child:
-                text != null ? Text(text!, style: AppTheme.btnStyle) : child!,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widgetUpperBtn ?? const SizedBox(),
+              AppButton(
+                isLoading: isLoading,
+                onPressed: onPressed,
+                borderRadius: radius,
+                child: text != null
+                    ? Text(text!, style: AppTheme.btnStyle)
+                    : child!,
+              ),
+            ],
           ),
         ),
       ),
