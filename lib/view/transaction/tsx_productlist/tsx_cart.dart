@@ -34,21 +34,15 @@ class TsxProductCartPage extends GetView<TsxProductListController> {
                       ...controller.productOnCarts().map(
                         (e) {
                           var data = controller.productOnCarts;
-                          var similarProducts =
-                              e.getSimilarProductOnCart(data).obs;
-                          return Obx(
-                            () {
-                              return AppCartCard(
-                                product: e,
-                                isLast:
-                                    controller.productOnCarts().last.id == e.id,
-                                customer: controller.customer.value,
-                                similarProducts: similarProducts(),
-                                onRemove: controller.onRemoveFromCart,
-                                onPointChanged: controller.countTotal,
-                                onQtyChanged: similarProducts.refresh,
-                              );
-                            },
+                          var similarProducts = e.getSimilarProductOnCart(data);
+                          return AppCartCard(
+                            product: e,
+                            isLast: controller.productOnCarts().last.id == e.id,
+                            customer: controller.customer.value,
+                            similarProducts: similarProducts,
+                            onRemove: controller.onRemoveFromCart,
+                            onPointChanged: controller.countTotal,
+                            onQtyChanged: data.refresh,
                           );
                         },
                       ),

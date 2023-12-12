@@ -94,6 +94,7 @@ class _AppTsxQtyUnitDialogState extends State<AppTsxQtyUnitDialog> {
         price ?? 0,
         widget.product.dscNominal,
         nPoint,
+        priceType.value,
         pointType,
         widget.similarProducts,
       );

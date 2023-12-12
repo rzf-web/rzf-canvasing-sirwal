@@ -57,20 +57,21 @@ class Customer with IName {
     return super.getInitialName(name);
   }
 
+  ProductPriceType getPriceType(int qty) {
+    var level = FuncHelper().getProductPriceLevelFromQtyLevel(qty);
+    return levels[level]!;
+  }
+
   setListPoint(List<ProductOnCart> products) {
     for (var item in products) {
-      var level = FuncHelper().getProductPriceLevelFromQtyLevel(
-        item.getSimilarProductOnCartQty(products),
-      );
-      var price = item.unit!.getPrice(
-        item.transaction,
-        priceType: levels[level]!,
-      );
+      var priceType = getPriceType(item.getSimilarProductOnCartQty(products));
+      var price = item.getPrice(priceType: priceType);
       var point = FuncHelper().pointsCalculation(
         item.onCart,
         price,
         item.dscNominal,
         item.nominalPoint,
+        priceType,
         item.pointType,
         item.getSimilarProductOnCart(products),
       );

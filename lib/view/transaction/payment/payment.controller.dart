@@ -344,10 +344,7 @@ class PaymentController extends GetxController {
 
   _countTotal() {
     for (var item in products) {
-      var price = item.unit!.getPrice(
-        item.transaction,
-        priceType: getProductPrice(item),
-      );
+      var price = item.getPrice(priceType: getProductPrice(item));
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
     }
     if (customer?.type.isMember ?? false) {

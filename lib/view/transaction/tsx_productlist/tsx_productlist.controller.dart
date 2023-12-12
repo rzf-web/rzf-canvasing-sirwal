@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rzf_canvasing_sirwal/data/product.data.dart';
-import 'package:rzf_canvasing_sirwal/enum/product_price_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/extension.dart';
@@ -198,9 +197,10 @@ class TsxProductListController extends GetxController {
     total.value = 0;
     totalProduct.value = productOnCarts.length;
     for (var item in productOnCarts) {
-      var price = item.unit!.getPrice(
-        transactionType!,
-        priceType: _getPriceType(item),
+      var price = item.getPrice(
+        priceType: customer.value?.getPriceType(
+          item.getSimilarProductOnCartQty(productOnCarts),
+        ),
       );
       total.value += price * (item.onCart ~/ item.unit!.isi!);
     }
@@ -211,17 +211,6 @@ class TsxProductListController extends GetxController {
         point.value += item.pointsEarned;
       }
     }
-  }
-
-  ProductPriceType _getPriceType(ProductOnCart data) {
-    var qty = data.onCart;
-    var similarProduct = data.getSimilarProductOnCart(productOnCarts);
-    var priceType = FuncHelper().getPriceFromCustomerLevels(
-      qty,
-      customer.value,
-      similarProduct,
-    );
-    return priceType;
   }
 
   _searchListener() async {

@@ -65,6 +65,33 @@ class ProductOnCart extends Product with IName {
     return getInitialName(name);
   }
 
+  List<ProductOnCart> getSimilarProductOnCart(List<ProductOnCart> products) {
+    var similarProducts = products.where(
+      (x) => x.id == id && x.barcode != barcode,
+    );
+    return similarProducts.toList();
+  }
+
+  int getSimilarProductOnCartQty(List<ProductOnCart> products) {
+    var qty = onCart;
+
+    var similarProducts = products.where(
+      (x) => x.id == id && x.barcode != barcode,
+    );
+
+    for (var item in similarProducts) {
+      qty += item.onCart;
+    }
+    return qty;
+  }
+
+  double getPrice({ProductPriceType? priceType}) {
+    return unit!.getPrice(
+      transaction,
+      priceType: priceType ?? ProductPriceType.retail,
+    );
+  }
+
   Map<String, dynamic> toBuyJson() {
     return {
       'product_id': id,
@@ -94,29 +121,9 @@ class ProductOnCart extends Product with IName {
       'isi': unit!.isi!.toInt(),
       'retur': 0,
       'buy': unit!.buy,
-      'sale': unit!.getPrice(transaction, priceType: priceType).toInt(),
-      'price': unit!.getPrice(transaction, priceType: priceLevel1).toInt(),
+      'sale': getPrice(priceType: priceType).toInt(),
+      'price': getPrice(priceType: priceLevel1).toInt(),
       'discount': dscNominal,
     };
-  }
-
-  List<ProductOnCart> getSimilarProductOnCart(List<ProductOnCart> products) {
-    var similarProducts = products.where(
-      (x) => x.id == id && x.barcode != barcode,
-    );
-    return similarProducts.toList();
-  }
-
-  int getSimilarProductOnCartQty(List<ProductOnCart> products) {
-    var qty = onCart;
-
-    var similarProducts = products.where(
-      (x) => x.id == id && x.barcode != barcode,
-    );
-
-    for (var item in similarProducts) {
-      qty += item.onCart;
-    }
-    return qty;
   }
 }

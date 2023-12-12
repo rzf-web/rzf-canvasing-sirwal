@@ -54,17 +54,17 @@ class _AppCartCardState extends State<AppCartCard> {
 
   substractQty() {
     qty.value--;
-    _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
+    _pointsCalculation();
     widget.onQtyChanged();
   }
 
   addQty() {
     qty.value++;
-    _pointsCalculation();
     _changeUnitPoint();
     _setActiveQty();
+    _pointsCalculation();
     widget.onQtyChanged();
   }
 
@@ -83,25 +83,10 @@ class _AppCartCardState extends State<AppCartCard> {
     widget.product.onCart = (qty.value * unit.value!.isi!).toInt();
   }
 
-  _pointsCalculation({bool isRemove = false, bool runPointChangedFunc = true}) {
-    var pointType = widget.product.pointType;
-    var nPoint = widget.product.nominalPoint;
-    var price = unit.value?.getPrice(
-      widget.product.transaction,
-      priceType: getPriceType(qtyRmove: isRemove ? 0 : null),
+  _pointsCalculation({bool isRemove = false}) {
+    widget.customer?.setListPoint(
+      [if (!isRemove) widget.product, ...widget.similarProducts],
     );
-    var point = FuncHelper().pointsCalculation(
-      isRemove ? 0 : qty.value,
-      price ?? 0,
-      disNominal.value,
-      nPoint,
-      pointType,
-      widget.similarProducts,
-    );
-    widget.product.pointsEarned = point;
-    for (var item in widget.similarProducts) {
-      item.pointsEarned = point;
-    }
     widget.onPointChanged();
   }
 
@@ -146,9 +131,9 @@ class _AppCartCardState extends State<AppCartCard> {
     );
   }
 
-  ProductPriceType getPriceType({int? qtyRmove}) {
+  ProductPriceType getPriceType() {
     return FuncHelper().getPriceFromCustomerLevels(
-      qtyRmove ?? qty.value,
+      qty.value,
       widget.customer,
       widget.similarProducts,
     );
@@ -309,6 +294,7 @@ class _AppCartCardState extends State<AppCartCard> {
                                 disNominal.value = nominal;
                                 widget.product.dscNominal = disNominal.value;
                                 widget.product.dscPercent = disPrecent.value;
+                                widget.onQtyChanged();
                                 _pointsCalculation();
                               },
                             ),
