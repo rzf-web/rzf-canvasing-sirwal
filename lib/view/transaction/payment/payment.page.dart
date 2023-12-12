@@ -4,6 +4,7 @@ import 'package:rzf_canvasing_sirwal/enum/sale_type.enum.dart';
 import 'package:rzf_canvasing_sirwal/enum/transaction.enum.dart';
 import 'package:rzf_canvasing_sirwal/helper/assets.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
+import 'package:rzf_canvasing_sirwal/view/printer/printer.page.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/payment/payment.controller.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/widget/app_payment_suggestion.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_custom_appbar.dart';
@@ -29,6 +30,10 @@ class PaymentPage extends GetView<PaymentController> {
           title: "Pembayaran",
           onLeadingTap: controller.getBack,
           actions: [
+            const AppSvgIconBtn(
+              svg: svgPrinter,
+              onTap: PrinterPage.open,
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: AppSvgIconBtn(
