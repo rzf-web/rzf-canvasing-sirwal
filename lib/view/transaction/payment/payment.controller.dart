@@ -135,6 +135,16 @@ class PaymentController extends GetxController {
     Printer.printInvoice(faktur);
   }
 
+  showPrinterWarning() async {
+    if (Printer.printerConnected == null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      showDialogAction(
+        ActionDialog.warning,
+        "Aplikasi belum terhubung ke printer",
+      );
+    }
+  }
+
   bool isTunai() => paymentType.value == "Tunai";
   bool isPass() => pay == grandTotal;
 
@@ -347,6 +357,7 @@ class PaymentController extends GetxController {
     tempoController.text = dateFormatUI(transactionDate);
     personController.text = customer?.name ?? '';
     getMoneySugest();
+    showPrinterWarning();
   }
 
   _countTotal() {
