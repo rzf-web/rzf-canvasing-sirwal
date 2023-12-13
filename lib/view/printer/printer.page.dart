@@ -33,7 +33,11 @@ class _PrinterPageState extends State<PrinterPage> {
   }
 
   Future<void> refresh() async {
-    await Printer.refresh();
+    getDevice();
+  }
+
+  getConnectedDevice() {
+    deviceConnected.value = Printer.printerConnected;
   }
 
   connect(BluetoothDevice device) async {
@@ -46,7 +50,7 @@ class _PrinterPageState extends State<PrinterPage> {
       "Anda ingin memutus perangkat ?",
       onConfrimYes: () async {
         Get.back();
-        await Printer.disconnect();
+        Printer.disconnect();
         deviceConnected.value = null;
       },
     );
@@ -55,6 +59,7 @@ class _PrinterPageState extends State<PrinterPage> {
   @override
   void initState() {
     getDevice();
+    getConnectedDevice();
     super.initState();
   }
 
@@ -78,8 +83,9 @@ class _PrinterPageState extends State<PrinterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: padding),
                 child: AppRemoveOverscroll(
                   child: RefreshIndicator(
-                    onRefresh: refresh,
+                    onRefresh: () => refresh(),
                     child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Obx(
                         () => Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

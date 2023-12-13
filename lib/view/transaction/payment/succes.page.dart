@@ -83,7 +83,8 @@ class PaySuccessPage extends GetView<PaymentController> {
                   ),
                 ),
                 AppButton(
-                  onPressed: controller.close,
+                  // onPressed: controller.close,
+                  onPressed: controller.printInvoice,
                   child: const Text("Tutup", style: AppTheme.btnStyle),
                 ),
               ],

@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
+import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_dialog_action.dart';
 
@@ -9,6 +11,8 @@ class Printer {
   static var devices = <BluetoothDevice>[];
   static var printer = BlueThermalPrinter.instance;
   static BluetoothDevice? _printerDevice;
+  static BluetoothDevice? get printerConnected => _printerDevice;
+  static const int _size = 1;
 
   static Future<bool> getDevices({
     bool showMsg = true,
@@ -113,5 +117,64 @@ class Printer {
       );
       _printerDevice = null;
     }
+  }
+
+  static printInvoice(Map<String, dynamic> data) {
+    var invoices = data['data'] as List<dynamic>;
+    var invoice = invoices[0];
+    var faktur = invoice['faktur'];
+    var cashier = invoice['kasir'];
+    var date = DateTime.tryParse(invoice['tanggal']);
+    var dateFormat = dateFormatUI(date!, format: "EEEE, dd MMMM yyyy");
+    var customer = invoice['pelanggan'];
+    var address = invoice['alamat'];
+    var subTotal = double.tryParse(invoice['total']) ?? 0.0;
+    var pay = double.tryParse(invoice['bayar']) ?? 0.0;
+    var kembali = double.tryParse(invoice['kembali']) ?? 0.0;
+    var hemat = 0.0;
+    var totalQty = 0.0;
+
+    printer.printCustom("GROSIR SIRWAL", _size, 1);
+    printer.printCustom(GlobalVar.profile!.address, _size, 1);
+    printer.printCustom("--------------------------------", _size, 1);
+    printer.printCustom("Kasir : $cashier | $faktur", _size, 0);
+    printer.printCustom(dateFormat, _size, 0);
+    printer.printCustom("Kepada Yth, $customer", _size, 0);
+    printer.printCustom("$address", _size, 0);
+    printer.printCustom("--------------------------------", _size, 1);
+    for (var item in invoices) {
+      var name = item['nama'];
+      var qty = double.parse(item['qty']);
+      var unit = item['satuan'];
+      var price = double.parse(item['harga']);
+      var discount = double.parse(item['diskon']);
+      var normalPrice = double.tryParse(item['harganormal']) ?? 0;
+      hemat += (normalPrice - price) * qty;
+      totalQty += qty;
+      printer.printCustom(name, _size, 0);
+      printer.printLeftRight(
+        "${doubleFormatter(qty)} $unit @${numberFormatter(price)}",
+        numberFormatter(price * qty),
+        _size,
+      );
+      printer.printLeftRight(
+        numberFormatter(normalPrice),
+        "- ${numberFormatter(discount * qty)}",
+        _size,
+      );
+    }
+    printer.printCustom("--------------------------------", _size, 1);
+    printer.printLeftRight('Jumlah Qty', doubleFormatter(totalQty), _size);
+    printer.printLeftRight('Anda Hemat', numberFormatter(hemat), _size);
+    printer.printLeftRight('Subtotal', numberFormatter(subTotal), _size);
+    printer.printLeftRight('Bayar', numberFormatter(pay), _size);
+    printer.printLeftRight('Kembali', numberFormatter(kembali), _size);
+    printer.printCustom("--------------------------------", _size, 1);
+    printer.printCustom(
+      "Terima Kasih atas Kunjungan Anda\nSelamat Berbelanja Kembali",
+      _size,
+      1,
+    );
+    printer.paperCut();
   }
 }

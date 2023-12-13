@@ -15,6 +15,7 @@ import 'package:rzf_canvasing_sirwal/model/tsx_account.dart';
 import 'package:rzf_canvasing_sirwal/routes/app_pages.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_helper.dart';
 import 'package:rzf_canvasing_sirwal/services/api/api_service.dart';
+import 'package:rzf_canvasing_sirwal/services/printer/blue_thermal_printer.dart';
 import 'package:rzf_canvasing_sirwal/view/transaction/payment/succes.page.dart';
 import 'package:rzf_canvasing_sirwal/widget/app_dialog_action.dart';
 
@@ -50,6 +51,7 @@ class PaymentController extends GetxController {
   var total = 0.0;
   var pay = 0.0;
   var point = 0.obs;
+  var faktur = <String, dynamic>{};
 
   getSales() async {
     salesLoading.value = true;
@@ -123,9 +125,14 @@ class PaymentController extends GetxController {
     var success = await manageResponse(response);
     if (success) {
       var data = getDataResponse(response);
+      faktur = data;
       Get.to(const PaySuccessPage());
-      print(data);
+      printInvoice();
     }
+  }
+
+  printInvoice() {
+    Printer.printInvoice(faktur);
   }
 
   bool isTunai() => paymentType.value == "Tunai";
