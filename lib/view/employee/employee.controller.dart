@@ -21,6 +21,7 @@ class EmployeeController extends GetxController {
   Future<void> getData() async {
     isLoading.value = true;
     employees.value = await EmployeeData().fetchData();
+    employees.sort((a, b) => a.cabang.compareTo(b.cabang));
     isLoading.value = false;
   }
 
