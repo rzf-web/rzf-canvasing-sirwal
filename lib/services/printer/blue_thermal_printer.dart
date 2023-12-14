@@ -132,6 +132,7 @@ class Printer {
     var pay = double.tryParse(invoice['bayar']) ?? 0.0;
     var kembali = double.tryParse(invoice['kembali']) ?? 0.0;
     var hemat = 0.0;
+    var hematPercent = 0.0;
     var totalQty = 0.0;
 
     printer.printCustom("GROSIR SIRWAL", _size, 1);
@@ -163,9 +164,14 @@ class Printer {
         _size,
       );
     }
+    hematPercent = (hemat / subTotal) * 100;
     printer.printCustom("--------------------------------", _size, 1);
     printer.printLeftRight('Jumlah Qty', doubleFormatter(totalQty), _size);
-    printer.printLeftRight('Anda Hemat', numberFormatter(hemat), _size);
+    printer.printLeftRight(
+      'Total Hemat ${hematPercent.toInt()}%',
+      "-${numberFormatter(hemat)}",
+      _size,
+    );
     printer.printLeftRight('Subtotal', numberFormatter(subTotal), _size);
     printer.printLeftRight('Bayar', numberFormatter(pay), _size);
     printer.printLeftRight('Kembali', numberFormatter(kembali), _size);

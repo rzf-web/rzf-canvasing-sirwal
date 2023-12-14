@@ -160,6 +160,26 @@ class PaymentPage extends GetView<PaymentController> {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: AppTextFieldInput(
+                                  label: "Total Barang",
+                                  hintText: "0",
+                                  readOnly: true,
+                                  readOnlyDifColor: true,
+                                  controller: controller.totalBarangC,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: AppTextFieldInput(
+                                  label: "Total Hemat",
+                                  hintText: "0",
+                                  readOnly: true,
+                                  readOnlyDifColor: true,
+                                  controller: controller.totalHematC,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: AppTextFieldInput(
                                   label: "Total Penjualan",
                                   hintText: "0",
                                   readOnly: true,

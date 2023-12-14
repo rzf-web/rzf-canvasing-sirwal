@@ -108,10 +108,7 @@ class ProductOnCart extends Product with IName {
     };
   }
 
-  Map<String, dynamic> toSaleJson(
-    ProductPriceType priceType,
-    ProductPriceType priceLevel1,
-  ) {
+  Map<String, dynamic> toSaleJson(ProductPriceType priceType) {
     return {
       'product_id': id,
       'barcode': barcode,
@@ -122,7 +119,7 @@ class ProductOnCart extends Product with IName {
       'retur': 0,
       'buy': unit!.buy,
       'sale': getPrice(priceType: priceType).toInt(),
-      'price': getPrice(priceType: priceLevel1).toInt(),
+      'price': getPrice().toInt(),
       'discount': dscNominal,
     };
   }

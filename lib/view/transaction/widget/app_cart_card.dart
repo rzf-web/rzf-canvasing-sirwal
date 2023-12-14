@@ -111,24 +111,13 @@ class _AppCartCardState extends State<AppCartCard> {
   }
 
   double getPricePercentaseFromLevel1Price() {
-    var level1Price = _getLevel1Price();
+    var transactionType = widget.product.transaction;
+    var level1Price = unit.value!.getPrice(transactionType);
     var nowPrice = _getPrice();
     var difference = level1Price - nowPrice;
     var percentase = (difference / level1Price) * 100;
 
     return percentase;
-  }
-
-  double _getLevel1Price() {
-    var transactionType = widget.product.transaction;
-    return unit.value!.getPrice(
-      transactionType,
-      priceType: FuncHelper().getPriceFromCustomerLevels(
-        1,
-        widget.customer,
-        [],
-      ),
-    );
   }
 
   ProductPriceType getPriceType() {
@@ -137,6 +126,11 @@ class _AppCartCardState extends State<AppCartCard> {
       widget.customer,
       widget.similarProducts,
     );
+  }
+
+  double getDefaultPrice() {
+    var transactionType = widget.product.transaction;
+    return unit.value!.getPrice(transactionType);
   }
 
   double _getPrice() {
@@ -210,7 +204,7 @@ class _AppCartCardState extends State<AppCartCard> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: namePrice(),
                   ),
-                  if ((qty.value + similarProductQty()) > 2)
+                  if (!getPriceType().isRetail)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 2.0),
                       child: Text.rich(
@@ -222,7 +216,7 @@ class _AppCartCardState extends State<AppCartCard> {
                           ),
                           children: [
                             TextSpan(
-                              text: numberFormatter(_getLevel1Price()),
+                              text: numberFormatter(getDefaultPrice()),
                               style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                               ),

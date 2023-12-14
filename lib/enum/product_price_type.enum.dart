@@ -19,4 +19,6 @@ extension ProductPriceTypeExtension on ProductPriceType {
         return ProductPriceType.retail;
     }
   }
+
+  bool get isRetail => this == ProductPriceType.retail;
 }

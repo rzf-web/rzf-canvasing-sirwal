@@ -34,6 +34,8 @@ class PaymentController extends GetxController {
   final payController = TextEditingController();
   final discountController = TextEditingController();
   final personController = TextEditingController();
+  final totalBarangC = TextEditingController();
+  final totalHematC = TextEditingController();
 
   var transactionDate = DateTime.now();
   var tempoDate = DateTime.now();
@@ -229,6 +231,8 @@ class PaymentController extends GetxController {
     payController.clear();
     grandTotalController.clear();
     totalController.clear();
+    totalBarangC.clear();
+    totalHematC.clear();
     products.clear();
     salesController.clear();
     _countTotal();
@@ -285,14 +289,7 @@ class PaymentController extends GetxController {
         customer,
         item.getSimilarProductOnCart(products),
       );
-      var priceLevel1 = FuncHelper().getPriceFromCustomerLevels(
-        1,
-        customer,
-        [],
-      );
-      data.add(
-        type.isBuy ? item.toBuyJson() : item.toSaleJson(priceType, priceLevel1),
-      );
+      data.add(type.isBuy ? item.toBuyJson() : item.toSaleJson(priceType));
     }
     return data;
   }
@@ -361,9 +358,13 @@ class PaymentController extends GetxController {
   }
 
   _countTotal() {
+    var totalBarang = 0;
+    var totalHemat = 0.0;
     for (var item in products) {
       var price = item.getPrice(priceType: getProductPrice(item));
       total += (price - item.dscNominal) * (item.onCart ~/ item.unit!.isi!);
+      totalBarang += item.onCart;
+      totalHemat += (item.getPrice() - price) * item.onCart;
     }
     if (customer?.type.isMember ?? false) {
       var productTmp = [...products.unique((e) => e.id, false)];
@@ -372,6 +373,8 @@ class PaymentController extends GetxController {
       }
     }
     grandTotal = total;
+    totalBarangC.text = totalBarang.toString();
+    totalHematC.text = moneyFormatter(totalHemat);
   }
 
   ProductPriceType getProductPrice(ProductOnCart data) {
