@@ -127,6 +127,7 @@ class Printer {
     var date = DateTime.tryParse(invoice['tanggal']);
     var dateFormat = dateFormatUI(date!, format: "EEEE, dd MMMM yyyy");
     var customer = invoice['pelanggan'];
+    var customerType = invoice['jenis'];
     var address = invoice['alamat'];
     var subTotal = double.tryParse(invoice['total']) ?? 0.0;
     var pay = double.tryParse(invoice['bayar']) ?? 0.0;
@@ -141,6 +142,7 @@ class Printer {
     printer.printCustom("Kasir : $cashier | $faktur", _size, 0);
     printer.printCustom(dateFormat, _size, 0);
     printer.printCustom("Kepada Yth, $customer", _size, 0);
+    printer.printCustom(customerType, _size, 0);
     printer.printCustom("$address", _size, 0);
     printer.printCustom("--------------------------------", _size, 1);
     for (var item in invoices) {
