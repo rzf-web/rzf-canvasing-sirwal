@@ -20,41 +20,44 @@ class SalePage extends GetView<SaleController> {
   @override
   Widget build(BuildContext context) {
     if (refreshController) Get.reload<SaleController>();
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Obx(
-          () => AppBarTransaction(
-            title: "Data Penjualan",
-            hintText: "Nama Pelanggan",
-            showLeading: showLeading,
-            leading: AppSvgIconBtn(
-              svg: svgLogout,
-              onTap: controller.logout,
-              size: 16,
-              color: AppTheme.titleColor,
+    return WillPopScope(
+      onWillPop: controller.onWillPop,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Obx(
+            () => AppBarTransaction(
+              title: "Data Penjualan",
+              hintText: "Nama Pelanggan",
+              showLeading: showLeading,
+              leading: AppSvgIconBtn(
+                svg: svgLogout,
+                onTap: controller.logout,
+                size: 16,
+                color: AppTheme.titleColor,
+              ),
+              controller: controller.searchController,
+              onChangedSearch: controller.changeMode,
+              onTap: controller.pickDate,
+              searchMode: controller.isFromHome
+                  ? NavigationController.isInSearchMode.value
+                  : controller.searchMode.value,
             ),
-            controller: controller.searchController,
-            onChangedSearch: controller.changeMode,
-            onTap: controller.pickDate,
-            searchMode: controller.isFromHome
-                ? NavigationController.isInSearchMode.value
-                : controller.searchMode.value,
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.productListPage,
-        child: const Icon(Icons.add),
-      ),
-      body: Obx(
-        () => AppListTransaction(
-          data: controller.saleData(),
-          noData: controller.isLastPage.value,
-          isLoading: controller.isLoading.value,
-          controller: controller.refreshController,
-          onRefresh: () => controller.refreshData(),
-          onLoading: () => controller.loadData(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: controller.productListPage,
+          child: const Icon(Icons.add),
+        ),
+        body: Obx(
+          () => AppListTransaction(
+            data: controller.saleData(),
+            noData: controller.isLastPage.value,
+            isLoading: controller.isLoading.value,
+            controller: controller.refreshController,
+            onRefresh: () => controller.refreshData(),
+            onLoading: () => controller.loadData(),
+          ),
         ),
       ),
     );
