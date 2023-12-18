@@ -320,6 +320,12 @@ class PaymentController extends GetxController {
         "Pilih sales terlebih dahulu",
       );
       return false;
+    } else if (saleType.value == null) {
+      showDialogAction(
+        ActionDialog.warning,
+        "Pilih jenis jual terlebih dahulu",
+      );
+      return false;
     } else if (paymentType.value == "Tunai" && pay < grandTotal) {
       showDialogAction(
         ActionDialog.warning,
