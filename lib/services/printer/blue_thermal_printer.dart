@@ -137,7 +137,12 @@ class Printer {
     var totalQty = 0.0;
 
     printer.printCustom("GROSIR SIRWAL", _size, 1);
-    printer.printCustom(GlobalVar.profile!.address, _size, 1);
+    printer.printCustom("Pusat Busana Muslim Terlengkap", _size, 1);
+    printer.printCustom(
+      "${GlobalVar.profile!.address} ${GlobalVar.profile!.phone}",
+      _size,
+      1,
+    );
     printer.printCustom("--------------------------------", _size, 1);
     printer.printCustom("Kasir : $cashier | $faktur", _size, 0);
     printer.printCustom(dateFormat, _size, 0);
@@ -152,6 +157,9 @@ class Printer {
       var price = double.parse(item['harga']);
       var discount = double.parse(item['diskon']);
       var normalPrice = double.tryParse(item['harganormal']) ?? 0;
+      var difference = normalPrice - price;
+      var percentase = (difference / normalPrice) * 100;
+
       hemat += (normalPrice - price) * qty;
       totalQty += qty;
       printer.printCustom(name, _size, 0);
@@ -160,17 +168,19 @@ class Printer {
         numberFormatter(price * qty),
         _size,
       );
-      printer.printLeftRight(
-        numberFormatter(normalPrice),
-        "- ${numberFormatter(discount * qty)}",
-        _size,
-      );
+      if (price != normalPrice) {
+        printer.printLeftRight(
+          "${numberFormatter(normalPrice)} (${percentase.toInt()}%)",
+          "- ${numberFormatter(discount * qty)}",
+          _size,
+        );
+      }
     }
     hematPercent = (hemat / subTotal) * 100;
     printer.printCustom("--------------------------------", _size, 1);
     printer.printLeftRight('Jumlah Qty', doubleFormatter(totalQty), _size);
     printer.printLeftRight(
-      'Total Hemat ${hematPercent.toInt()}%',
+      'Hemat (${hematPercent.toInt()}%)',
       "-${numberFormatter(hemat)}",
       _size,
     );
@@ -179,7 +189,12 @@ class Printer {
     printer.printLeftRight('Kembali', numberFormatter(kembali), _size);
     printer.printCustom("--------------------------------", _size, 1);
     printer.printCustom(
-      "Terima Kasih atas Kunjungan Anda\nSelamat Berbelanja Kembali",
+      "Tunjukan nota ini jika ingin melakukan penukaran barang*",
+      _size,
+      1,
+    );
+    printer.printCustom(
+      "AKUMULLAH KHAIRAN ATAS KUNJUNGAN ANDA",
       _size,
       1,
     );
