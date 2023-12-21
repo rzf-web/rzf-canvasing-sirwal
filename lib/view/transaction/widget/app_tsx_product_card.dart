@@ -74,6 +74,7 @@ class _AppTsxProductCardState extends State<AppTsxProductCard> {
       barcode: widget.product.barcode,
       name: widget.product.name,
       panjang: widget.product.panjang,
+      categoryAge: widget.product.categoryAge,
       productSize: widget.product.productSize,
       variant: widget.product.variant,
       type: widget.product.type,

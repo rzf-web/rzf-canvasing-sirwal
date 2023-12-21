@@ -8,6 +8,7 @@ class Product with IName {
   final String? id;
   final String? barcode;
   final String name;
+  final String categoryAge;
   final String panjang;
   final String productSize;
   final String variant;
@@ -27,6 +28,7 @@ class Product with IName {
     this.barcode,
     required this.name,
     required this.panjang,
+    required this.categoryAge,
     required this.productSize,
     required this.variant,
     required this.type,
@@ -46,6 +48,7 @@ class Product with IName {
       id: json['product_id'] ?? "",
       barcode: json['barcode'] ?? "",
       name: json['product_name'] ?? "",
+      categoryAge: json['kukuran'] ?? "",
       panjang: json['panjang'] ?? "",
       productSize: json['size_name'] ?? "",
       variant: json['variant_name'] ?? "",
@@ -108,7 +111,7 @@ class Product with IName {
   }
 
   String getName() {
-    return '$name $panjang $productSize $variant';
+    return '$name $panjang $categoryAge $productSize $variant';
   }
 
   String getInitialProduct() {
