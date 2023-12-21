@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:rzf_canvasing_sirwal/data/global_variable.dart';
+import 'package:rzf_canvasing_sirwal/helper/assets.dart';
 import 'package:rzf_canvasing_sirwal/helper/dialog.dart';
 import 'package:rzf_canvasing_sirwal/helper/formatter.dart';
 import 'package:rzf_canvasing_sirwal/theme/theme.dart';
@@ -119,7 +120,7 @@ class Printer {
     }
   }
 
-  static printInvoice(Map<String, dynamic> data) {
+  static printInvoice(Map<String, dynamic> data) async {
     var invoices = data['data'] as List<dynamic>;
     var invoice = invoices[0];
     var faktur = invoice['faktur'];
@@ -136,6 +137,7 @@ class Printer {
     var hematPercent = 0.0;
     var totalQty = 0.0;
 
+    await _printImage();
     printer.printCustom("GROSIR SIRWAL", _size, 1);
     printer.printCustom("Pusat Busana Muslim Terlengkap", _size, 1);
     printer.printCustom(
@@ -193,11 +195,30 @@ class Printer {
       _size,
       1,
     );
+    printer.printNewLine();
     printer.printCustom(
-      "AKUMULLAH KHAIRAN ATAS KUNJUNGAN ANDA",
+      "JAZAKUMULLAH KHAIRAN ATAS KUNJUNGAN ANDA",
+      _size,
+      1,
+    );
+    printer.printNewLine();
+    printer.printCustom(
+      "CS 1: 0813-3135-5365",
+      _size,
+      1,
+    );
+    printer.printCustom(
+      "CS 2: 0895-0531-9455",
       _size,
       1,
     );
     printer.paperCut();
+  }
+
+  static _printImage() async {
+    ByteData bytesAsset = await rootBundle.load(invoiceImage);
+    Uint8List imageBytesFromAsset = bytesAsset.buffer
+        .asUint8List(bytesAsset.offsetInBytes, bytesAsset.lengthInBytes);
+    printer.printImageBytes(imageBytesFromAsset);
   }
 }

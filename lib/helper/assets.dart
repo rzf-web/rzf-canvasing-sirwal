@@ -50,6 +50,7 @@ const ilusPaySucces = "assets/ilustration/ilus-payment-succes.svg";
 //Image
 const loginLogo = "assets/img/login-logo.png";
 const fakeUser = "assets/img/fake-user.jpeg";
+const invoiceImage = "assets/img/invoice-img.jpg";
 
 //Audio
 const scanSound = "audio/scan-sound.mp3";
