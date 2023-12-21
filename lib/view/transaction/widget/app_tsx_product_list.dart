@@ -39,7 +39,7 @@ class AppTsxProductList extends GetView<TsxProductListController> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
             ],
           ),
         ),

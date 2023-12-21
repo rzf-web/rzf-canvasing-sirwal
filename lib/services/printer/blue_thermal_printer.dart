@@ -13,7 +13,7 @@ class Printer {
   static var printer = BlueThermalPrinter.instance;
   static BluetoothDevice? _printerDevice;
   static BluetoothDevice? get printerConnected => _printerDevice;
-  static const int _size = 1;
+  static const int _size = 0;
 
   static Future<bool> getDevices({
     bool showMsg = true,
@@ -138,7 +138,6 @@ class Printer {
     var totalQty = 0.0;
 
     await _printImage();
-    printer.printCustom("GROSIR SIRWAL", _size, 1);
     printer.printCustom("Pusat Busana Muslim Terlengkap", _size, 1);
     printer.printCustom(
       "${GlobalVar.profile!.address} ${GlobalVar.profile!.phone}",
@@ -152,6 +151,7 @@ class Printer {
     printer.printCustom(customerType, _size, 0);
     printer.printCustom("$address", _size, 0);
     printer.printCustom("--------------------------------", _size, 1);
+    var no = 1;
     for (var item in invoices) {
       var name = item['nama'];
       var qty = double.parse(item['qty']);
@@ -164,7 +164,7 @@ class Printer {
 
       hemat += (normalPrice - price) * qty;
       totalQty += qty;
-      printer.printCustom(name, _size, 0);
+      printer.printCustom("$no. $name", _size, 0);
       printer.printLeftRight(
         "${doubleFormatter(qty)} $unit @${numberFormatter(price)}",
         numberFormatter(price * qty),
@@ -172,17 +172,19 @@ class Printer {
       );
       if (price != normalPrice) {
         printer.printLeftRight(
-          "${numberFormatter(normalPrice)} (${percentase.toInt()}%)",
+          "${numberFormatter(normalPrice)} (${percentase.round()}%)",
           "- ${numberFormatter(discount * qty)}",
           _size,
         );
       }
+      printer.printNewLine();
+      no++;
     }
     hematPercent = (hemat / subTotal) * 100;
     printer.printCustom("--------------------------------", _size, 1);
     printer.printLeftRight('Jumlah Qty', doubleFormatter(totalQty), _size);
     printer.printLeftRight(
-      'Hemat (${hematPercent.toInt()}%)',
+      'Hemat (${hematPercent.round()}%)',
       "-${numberFormatter(hemat)}",
       _size,
     );
@@ -191,13 +193,13 @@ class Printer {
     printer.printLeftRight('Kembali', numberFormatter(kembali), _size);
     printer.printCustom("--------------------------------", _size, 1);
     printer.printCustom(
-      "Tunjukan nota ini jika ingin melakukan penukaran barang*",
+      "Tunjukan nota ini jika ingin\nmelakukan penukaran barang*",
       _size,
       1,
     );
     printer.printNewLine();
     printer.printCustom(
-      "JAZAKUMULLAH KHAIRAN ATAS KUNJUNGAN ANDA",
+      "JAZAKUMULLAH KHAIRAN ATAS\nKUNJUNGAN ANDA",
       _size,
       1,
     );

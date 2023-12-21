@@ -111,7 +111,20 @@ class Product with IName {
   }
 
   String getName() {
-    return '$name $panjang $categoryAge $productSize $variant';
+    var value = name;
+    if (panjang != '') {
+      value += "  $panjang";
+    }
+    if (categoryAge != '') {
+      value += "  $categoryAge";
+    }
+    if (productSize != '') {
+      value += " - $productSize";
+    }
+    if (variant != '') {
+      value += "  $variant";
+    }
+    return value;
   }
 
   String getInitialProduct() {
