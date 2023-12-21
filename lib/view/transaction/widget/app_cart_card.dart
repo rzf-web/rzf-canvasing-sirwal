@@ -206,34 +206,11 @@ class _AppCartCardState extends State<AppCartCard> {
                   ),
                   if (!getPriceType().isRetail)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 2.0),
-                      child: Text.rich(
-                        TextSpan(
-                          text: "Hemat : ",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.capColor,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: numberFormatter(getDefaultPrice()),
-                              style: const TextStyle(
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                                  "   ${percentFormatter(getPricePercentaseFromLevel1Price())}%",
-                              style: const TextStyle(
-                                color: AppTheme.primaryColor,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: savingPrice(),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 2.0),
+                    padding: const EdgeInsets.only(bottom: 4.0),
                     child: Obx(
                       () => Row(
                         children: [
@@ -332,13 +309,55 @@ class _AppCartCardState extends State<AppCartCard> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Obx(
             () => Text(
-              moneyFormatter(_getPrice()),
+              moneyFormatter((_getPrice() - disNominal.value) * qty.value),
               style: const TextStyle(
                 fontSize: 14,
                 color: AppTheme.primaryColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget savingPrice() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Text.rich(
+            TextSpan(
+              text: "Hemat : ",
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppTheme.capColor,
+              ),
+              children: [
+                TextSpan(
+                  text: numberFormatter(getDefaultPrice()),
+                  style: const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                TextSpan(
+                  text:
+                      "   ${percentFormatter(getPricePercentaseFromLevel1Price())}%",
+                  style: const TextStyle(
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Text(
+          moneyFormatter(_getPrice()),
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppTheme.capColor,
           ),
         ),
       ],
